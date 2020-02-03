@@ -7,17 +7,27 @@ module Api
       before_action :product_version, :locale
 
       def index
-        @screenshots = Screenshot.where(product_version_id: @version, locale_id: @locale)
-        render json: @screenshots, include: :images
+        screenshots = Screenshot.where(product_version_id: @version, locale_id: @locale)
+        screenshot =  screenshots.map { |screenshots| screenshots.as_json.merge(images:
+          screenshots.images.map { |image| url_for(image) }) }
+        if screenshot.any?
+          render json: screenshot
+        else
+          render json: {
+            status: 404,
+            error: :not_found,
+            message: "Screenshots with version id #{params[:product_version_id]}  and locale id #{params[:locale_id]} not found"
+          }, status: 404
+        end
       end
 
       def new
-        @screenshot = Screenshot.new
+        screenshot = Screenshot.new
       end
 
       def create
-        @screenshot = Screenshot.new(screenshot_params)
-        @screenshot.save!
+        screenshot = Screenshot.new(screenshot_params)
+        screenshot.save!
         rescue ActiveRecord::RecordInvalid => invalid
           render json: { errors: invalid.record.errors }
       end
