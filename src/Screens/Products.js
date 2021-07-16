@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import BASE_URL from "../API/BASE_URL";
 import axios from "axios";
+import "@patternfly/react-core/dist/styles/base.css";
 import {
   CardBody,
   Card,
@@ -24,7 +25,7 @@ export default function Products() {
 
   return (
     <PageSection>
-      <Grid gutter="lg" sm={6} md={3}>
+      <Grid hasGutter gutter="lg" sm={6} md={3}>
         {products.map((product) => {
           return (
             <Card className="product-card" key={product.id} isHoverable>

@@ -4,8 +4,8 @@ import {
   FormSelect,
   FormSelectOption,
   Button,
-  DataToolbarContent,
-  DataToolbarItem,
+  ToolbarContent,
+  ToolbarItem,
 } from "@patternfly/react-core";
 import { Switch } from "@patternfly/react-core";
 
@@ -25,11 +25,11 @@ export default function PaginateForm(props) {
   return (
     <>
       <Form onSubmit={props.handleSubmit}>
-        <DataToolbarContent>
-          <DataToolbarItem variant="label" id="version">
-            Select a Version
-          </DataToolbarItem>
-          <DataToolbarItem>
+        <ToolbarContent>
+          <ToolbarItem variant="label" id="version">
+            Select a Version 
+          </ToolbarItem>
+          <ToolbarItem>
             <FormSelect
               value={
                 selectProductsVersion
@@ -53,11 +53,11 @@ export default function PaginateForm(props) {
                 />
               ))}
             </FormSelect>
-          </DataToolbarItem>
-          <DataToolbarItem variant="label" id="locale">
-            Select a Locale
-          </DataToolbarItem>
-          <DataToolbarItem>
+          </ToolbarItem>
+          <ToolbarItem variant="label" id="locale">
+            Select a Locale 
+          </ToolbarItem>
+          <ToolbarItem>
             <FormSelect
               value={selectLocales ? selectLocales : props.selectLocales}
               onChange={(e, event) => {
@@ -77,13 +77,13 @@ export default function PaginateForm(props) {
                 />
               ))}
             </FormSelect>
-          </DataToolbarItem>
-          <DataToolbarItem>
+          </ToolbarItem>
+          <ToolbarItem>
             <Button type="submit" value="submit">
               Submit
             </Button>
-          </DataToolbarItem>
-          <DataToolbarItem>
+          </ToolbarItem>
+          <ToolbarItem>
             <Switch
               id="simple-switch"
               label="Two Column Layout on"
@@ -98,8 +98,8 @@ export default function PaginateForm(props) {
                   : false
               }
             />
-          </DataToolbarItem>
-        </DataToolbarContent>
+          </ToolbarItem>
+        </ToolbarContent>
       </Form>
     </>
   );
