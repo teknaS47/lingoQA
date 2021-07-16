@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Split, SplitItem } from "@patternfly/react-core";
-import { Pagination, Badge } from "@patternfly/react-core";
+import { Pagination, PaginationVariant, Badge } from "@patternfly/react-core";
 import SimpleEmptyState from "./SimpleEmptyState";
 // import { uuid } from "uuidv4";
 
@@ -28,6 +28,8 @@ export default function Paginate(props) {
 
   //Next set of Items
   const onNextClick = (_event, page) => {
+
+    
     setIdL(IdL, IdL++);
     setIdR(IdR, IdR++);
     setPage(page);
@@ -99,6 +101,7 @@ export default function Paginate(props) {
         itemCount={itemCount}
         perPage={perPage}
         page={page}
+        variant={PaginationVariant.bottom}
         onSetPage={onSetPage}
         onPerPageSelect={onPerPageSelect}
         onNextClick={onNextClick}
@@ -123,6 +126,7 @@ export default function Paginate(props) {
         itemCount={itemCount}
         perPage={perPage}
         page={page}
+        variant={PaginationVariant.bottom}
         onSetPage={onSetPage}
         onPerPageSelect={onPerPageSelect}
         onNextClick={onNextClick}
@@ -136,17 +140,17 @@ export default function Paginate(props) {
   const paginateOther = () => (
     <>
       <Pagination
-        widgetId="pagination-options-menu-top"
+        widgetId="pagination-options-menu-bottom"
         itemCount={itemCount}
         perPage={perPage}
         page={page}
+        variant={PaginationVariant.bottom}
         onSetPage={onSetPage}
         onPerPageSelect={onPerPageSelect}
         onNextClick={onNextClick}
         onPreviousClick={onPreviousClick}
         onFirstClick={onFirstClick}
         onLastClick={onLastClick}
-        color={"#0000"}
       />
       {props.changeLayout === true ? (
         //  For screenshots display side by side
@@ -232,6 +236,7 @@ export default function Paginate(props) {
         itemCount={itemCount}
         perPage={perPage}
         page={page}
+        variant={PaginationVariant.bottom}
         onSetPage={onSetPage}
         onPerPageSelect={onPerPageSelect}
         onNextClick={onNextClick}

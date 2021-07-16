@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Split, SplitItem } from "@patternfly/react-core";
-import { Pagination, Badge } from "@patternfly/react-core";
+import { Pagination, PaginationVariant, Badge } from "@patternfly/react-core";
 import SimpleEmptyState from "./SimpleEmptyState";
 // import { uuid } from "uuidv4";
 
@@ -140,6 +140,7 @@ export default function Paginate(props) {
         itemCount={itemCount}
         perPage={perPage}
         page={page}
+        // variant={PaginationVariant}
         onSetPage={onSetPage}
         onPerPageSelect={onPerPageSelect}
         onNextClick={onNextClick}
@@ -232,6 +233,7 @@ export default function Paginate(props) {
         itemCount={itemCount}
         perPage={perPage}
         page={page}
+        // variant={PaginationVariant.bottom}
         onSetPage={onSetPage}
         onPerPageSelect={onPerPageSelect}
         onNextClick={onNextClick}

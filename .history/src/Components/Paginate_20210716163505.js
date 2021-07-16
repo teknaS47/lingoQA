@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Split, SplitItem } from "@patternfly/react-core";
-import { Pagination, Badge } from "@patternfly/react-core";
+import { Pagination, PaginationVariant, Badge } from "@patternfly/react-core";
 import SimpleEmptyState from "./SimpleEmptyState";
 // import { uuid } from "uuidv4";
 

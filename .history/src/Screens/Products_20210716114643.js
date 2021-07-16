@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import BASE_URL from "../API/BASE_URL";
 import axios from "axios";
+import "@patternfly/react-core/dist/styles/base.css";
 import {
   CardBody,
   Card,
