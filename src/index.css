@@ -1,0 +1,28 @@
+.pf-c-page {
+  min-height: 100vh;
+}
+
+.product-card .product-title {
+  margin: 10px 0 0;
+  font-weight: 700;
+  color: rgb(19, 97, 241);
+}
+
+.image {
+  height: 50vh;
+  width: auto;
+}
+.image1 {
+  width: auto;
+}
+.en_screens {
+  margin-left: 20%;
+  margin-right: 20%;
+}
+img:hover {
+  box-shadow: 0 0 4px 2px black;
+}
+
+.layout {
+  left: 320%;
+}
