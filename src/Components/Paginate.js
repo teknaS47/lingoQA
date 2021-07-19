@@ -75,7 +75,6 @@ export default function Paginate(props) {
         itemCount={itemCount}
         perPage={perPage}
         page={page}
-        variant={PaginationVariant.bottom}
         onSetPage={onSetPage}
         onPerPageSelect={onPerPageSelect}
         onNextClick={onNextClick}
@@ -93,7 +92,6 @@ export default function Paginate(props) {
         itemCount={itemCount}
         perPage={perPage}
         page={page}
-        variant={PaginationVariant.bottom}
         onSetPage={onSetPage}
         onPerPageSelect={onPerPageSelect}
         onNextClick={onNextClick}
@@ -111,7 +109,6 @@ export default function Paginate(props) {
         itemCount={itemCount}
         perPage={perPage}
         page={page}
-        variant={PaginationVariant.bottom}
         onSetPage={onSetPage}
         onPerPageSelect={onPerPageSelect}
         onNextClick={onNextClick}
@@ -152,7 +149,6 @@ export default function Paginate(props) {
         itemCount={itemCount}
         perPage={perPage}
         page={page}
-        variant={PaginationVariant.bottom}
         onSetPage={onSetPage}
         onPerPageSelect={onPerPageSelect}
         onNextClick={onNextClick}
