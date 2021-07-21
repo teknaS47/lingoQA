@@ -47,21 +47,18 @@
   },
   "browserslist": {
     "production": [
-      ">0.3%",
+      ">0.2%",
       "not dead",
-      "not op_mini all",
-      "not ie 11"
+      "not op_mini all"
     ],
     "development": [
-      ">0.3%",
-      "not ie 11",
-      "not dead",
-      "not op_mini all",
+      
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
     ]
   },
+  
   "devDependencies": {
     "@storybook/addon-actions": "^5.3.8",
     "@storybook/addon-links": "^5.3.8",
