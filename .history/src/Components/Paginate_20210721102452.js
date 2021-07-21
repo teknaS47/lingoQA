@@ -118,7 +118,7 @@ export default function Paginate(props) {
       />
       {/* For screenshots display side by side */}
       <div id="image-compare">
-        <Split hasGutter gutter="md">
+        <Split has gutter="md">
           <div>
             {elementsLeft.length &&
               <SplitItem>
