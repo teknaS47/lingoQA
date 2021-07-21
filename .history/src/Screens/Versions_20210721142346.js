@@ -67,6 +67,7 @@ export default function Versions(props) {
   // To get selected Version and Locale to get screenshots
   const onFormSubmit = async (event) => {
     event.preventDefault();
+    let error;
     try {
       const screenshotsData = await axios(`${BASE_URL}/screenshots`, {
         params: {
@@ -88,8 +89,7 @@ export default function Versions(props) {
         setItemCount(screenshotsENData.data[0].images.length);
       }
     } catch (err) {
-      return err;
-    }
+re    }
   };
   return (
     <>

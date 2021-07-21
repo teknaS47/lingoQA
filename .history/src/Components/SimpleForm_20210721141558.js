@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Form,
@@ -8,7 +9,7 @@ import {
   Button,
   CardBody,
   Card,
-  Bullseye,
+  Bullseye
 } from "@patternfly/react-core";
 import SimpleEmptyState from "./SimpleEmptyState";
 
@@ -23,19 +24,11 @@ export default function SimpleForm(props) {
           <Form onSubmit={props.handleSubmit}>
             <FormGroup label="Select Version" fieldId="version">
               <FormSelect
-                value={
-                  selectProductsVersion
-                    ? selectProductsVersion
-                    : props.selectProductsVersion
-                }
-                onChange={(e, event) => {
-                  props.handleVersionChange(e, event);
-                  setSelectProductsVersion(e, event);
-                }}
+                value={selectProductsVersion ? selectProductsVersion : props.selectProductsVersion}
+                onChange={(e, event) => props.handleVersionChange(e, event), setSelectProductsVersion(e, event))}
                 aria-label="Version"
                 id="version"
-                name="version"
-              >
+                name="version">
                 <option>Select</option>
                 {props.productsVersion.map((option, index) => (
                   <FormSelectOption
@@ -46,17 +39,13 @@ export default function SimpleForm(props) {
                 ))}
               </FormSelect>
             </FormGroup>
-            <FormGroup label="Select Locale" fieldId="locale">
+            <FormGroup label="Select Locale" fieldId="locale" >
               <FormSelect
                 value={selectLocales ? selectLocales : props.selectLocales}
-                onChange={(e, event) => {
-                  props.handleLocaleChange(e, event);
-                  setSelectLocales(e, event);
-                }}
+                onChange={(e, event) => (props.handleLocaleChange(e, event), setSelectLocales(e, event))}
                 aria-label="Locale"
                 id="locale"
-                name="locale"
-              >
+                name="locale">
                 <option>Select</option>
                 {props.locales.map((option, index) => (
                   <FormSelectOption
@@ -74,5 +63,5 @@ export default function SimpleForm(props) {
         </CardBody>
       </Card>
     </Bullseye>
-  );
+  )
 }

@@ -50,9 +50,8 @@ export default function SimpleForm(props) {
               <FormSelect
                 value={selectLocales ? selectLocales : props.selectLocales}
                 onChange={(e, event) => {
-                  props.handleLocaleChange(e, event);
-                  setSelectLocales(e, event);
-                }}
+                  props.handleLocaleChange(e, event), setSelectLocales(e, event)
+                )}
                 aria-label="Locale"
                 id="locale"
                 name="locale"

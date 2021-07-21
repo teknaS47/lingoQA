@@ -15,36 +15,36 @@ export default function Paginate(props) {
 
   //Set the page
   const onSetPage = (_event, pageNumber) => {
-    setPage(pageNumber);
+    setPage(pageNumber)
   };
 
   //Items to be displayed per page
   const onPerPageSelect = (_event, perPage) => {
-    setPerPage(perPage);
+    setPerPage(perPage)
   };
 
-  //Next set of Items
+  //Next set of Items 
   const onNextClick = (_event, page) => {
-    setPage(page);
-    setOffset((page - 1) * perPage);
+    setPage(page)
+    setOffset((page - 1) * (perPage))
   };
 
   //Previous set of Items
   const onPreviousClick = (_event, page) => {
-    setPage(page);
-    setOffset((page - 1) * perPage);
+    setPage(page)
+    setOffset((page - 1) * (perPage));
   };
 
   //First set of Items
   const onFirstClick = (_event, page) => {
-    setPage(page);
-    setOffset(0);
+    setPage(page)
+    setOffset(0)
   };
 
   //Last set of items
   const onLastClick = (_event, page) => {
-    setPage(page);
-    setOffset((page - 1) * perPage);
+    setPage(page)
+    setOffset((page - 1) * (perPage));
   };
 
   React.useEffect(() => {
@@ -57,29 +57,16 @@ export default function Paginate(props) {
   React.useEffect(() => {
     const SetImages = () => {
       if (props.screenshotsEN.length !== 0) {
-        const elementsLeft = props.screenshotsEN[0].images.slice(
-          offset,
-          offset + perPage
-        );
-        setElementLeft(elementsLeft);
+        const elementsLeft = props.screenshotsEN[0].images.slice(offset, (offset + perPage));
+        setElementLeft(elementsLeft)
       }
       if (props.screenshotsOther.length !== 0) {
-        const elementsRight = props.screenshotsOther[0].images.slice(
-          offset,
-          offset + perPage
-        );
-        setElementRight(elementsRight);
+        const elementsRight = props.screenshotsOther[0].images.slice(offset, (offset + perPage));
+        setElementRight(elementsRight)
       }
-    };
+    }
     SetImages();
-  }, [
-    offset,
-    perPage,
-    screenshotsEN,
-    screenshotsOther,
-    props.screenshotsEN,
-    props.screenshotsOther,
-  ]);
+  }, [offset, perPage, screenshotsEN, screenshotsOther])
 
   const paginateEN = () => (
     <>
@@ -113,7 +100,7 @@ export default function Paginate(props) {
         onLastClick={onLastClick}
       />
     </>
-  );
+  )
 
   const paginateOther = () => (
     <>
@@ -133,7 +120,7 @@ export default function Paginate(props) {
       <div id="image-compare">
         <Split hasGutter gutter="md">
           <div>
-            {elementsLeft.length && (
+            {elementsLeft.length &&
               <SplitItem>
                 <div>
                   {elementsLeft.map((image, index) => (
@@ -141,10 +128,11 @@ export default function Paginate(props) {
                   ))}
                 </div>
               </SplitItem>
-            )}
+
+            }
           </div>
           <div>
-            {elementsRight.length && (
+            {elementsRight.length &&
               <SplitItem>
                 <div>
                   {elementsRight.map((image, index) => (
@@ -152,7 +140,7 @@ export default function Paginate(props) {
                   ))}
                 </div>
               </SplitItem>
-            )}
+            }
           </div>
         </Split>
       </div>
@@ -169,23 +157,21 @@ export default function Paginate(props) {
         onLastClick={onLastClick}
       />
     </>
-  );
+  )
 
   if (props.screenshotsEN.length === 0) {
     return <SimpleEmptyState />;
-  } else if (
-    typeof itemCount !== "undefined" &&
-    props.screenshotsOther.length === 0
-  ) {
+  }
+  else if ((typeof itemCount !== "undefined") && (props.screenshotsOther.length === 0)) {
     return <div className="mb-4">{paginateEN()}</div>;
-  } else if (
-    typeof itemCount !== "undefined" &&
-    props.screenshotsOther[0].id === props.screenshotsEN[0].id
-  ) {
+  }
+  else if ((typeof itemCount !== "undefined") && (props.screenshotsOther[0].id === props.screenshotsEN[0].id)) {
     return <div className="mb-4">{paginateEN()}</div>;
-  } else {
+  }
+  else {
     if (typeof itemCount !== "undefined")
-      return <div className="mb-4">{paginateOther()}</div>;
-    else return null;
+      return <div className="mb-4">{paginateOther()}</div>
+    else
+      return null
   }
 }

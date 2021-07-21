@@ -49,10 +49,9 @@ export default function PaginateForm(props) {
           <ToolbarItem>
             <FormSelect
               value={selectLocales ? selectLocales : props.selectLocales}
-              onChange={(e, event) => {
-                props.handleLocaleChange(e, event);
-                setSelectLocales(e, event);
-              }}
+              onChange={(e, event) => (
+                props.handleLocaleChange(e, event); setSelectLocales(e, event)
+              )}
               aria-label="Locale"
               id="locale"
               name="locale"

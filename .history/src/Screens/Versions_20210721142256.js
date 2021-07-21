@@ -88,7 +88,7 @@ export default function Versions(props) {
         setItemCount(screenshotsENData.data[0].images.length);
       }
     } catch (err) {
-      return err;
+      error = err;
     }
   };
   return (

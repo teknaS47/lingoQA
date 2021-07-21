@@ -72,14 +72,7 @@ export default function Paginate(props) {
       }
     };
     SetImages();
-  }, [
-    offset,
-    perPage,
-    screenshotsEN,
-    screenshotsOther,
-    props.screenshotsEN,
-    props.screenshotsOther,
-  ]);
+  }, [offset, perPage, screenshotsEN, screenshotsOther, props.screenshotsEN, props.scre]);
 
   const paginateEN = () => (
     <>
