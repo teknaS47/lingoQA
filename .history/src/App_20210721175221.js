@@ -2,7 +2,7 @@ import { Route, Switch, BrowserRouter } from "react-router-dom";
 import "@patternfly/react-core/dist/styles/base.css";
 import { PageHeader, Page } from "@patternfly/react-core";
 import React from "react";
-import Products from "./Screens/Products";
+import Products from "./Screens/Products"
 import Versions from "./Screens/Versions";
 
 export default function PageLayoutSimpleNav() {
@@ -12,14 +12,18 @@ export default function PageLayoutSimpleNav() {
   };
   return (
     <BrowserRouter>
-      <Page
-        header={<PageHeader logo={"LingoQA Dashboard"} logoProps={logoProps} />}
-      >
-        <Switch>
+            <Page
+
+      <Switch>
+          header={<PageHeader logo={"LingoQA Dashboard"} logoProps={logoProps} />}>
           <Route exact path="/" component={Products} />
-          <Route path="/products/:productid/screenshots" component={Versions} />
-        </Switch>
+          <Route
+            path="/products/:productid/screenshots"
+            component={Versions}
+          />
+      </Switch>
       </Page>
+
     </BrowserRouter>
   );
 }
