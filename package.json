@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@patternfly/react-core": "^3.129.3",
-    "@patternfly/react-topology": "^2.14.66",
+    "@patternfly/react-core": "^4.135.0",
+    "@patternfly/react-topology": "^4.9.6",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -12,9 +12,9 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.4.1",
     "dotenv": "^8.2.0",
-    "react": "^16.12.0",
+    "react": "^17.0.2",
     "react-bootstrap": "^1.0.1",
-    "react-dom": "^16.12.0",
+    "react-dom": "^17.0.2",
     "react-hook-form": "^6.0.8",
     "react-image": "^2.2.2",
     "react-image-mapper": "^0.0.15",
@@ -41,11 +41,16 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
+      ">0.3%",
+      "not ie 11",
       "not dead",
       "not op_mini all"
     ],
     "development": [
+      ">0.3%",
+      "not ie 11",
+      "not dead",
+      "not op_mini all",
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
