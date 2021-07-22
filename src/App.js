@@ -12,16 +12,14 @@ export default function PageLayoutSimpleNav() {
   };
   return (
     <BrowserRouter>
-      <Switch>
-        <Page
-          header={<PageHeader logo={"LingoQA Dashboard"} logoProps={logoProps} />}>
+      <Page
+        header={<PageHeader logo={"LingoQA Dashboard"} logoProps={logoProps} />}
+      >
+        <Switch>
           <Route exact path="/" component={Products} />
-          <Route
-            path="/products/:productid/screenshots"
-            component={Versions}
-          />
-        </Page>
-      </Switch>
+          <Route path="/products/:productid/screenshots" component={Versions} />
+        </Switch>
+      </Page>
     </BrowserRouter>
   );
 }
