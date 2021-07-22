@@ -24,3 +24,6 @@ yarn-error.log*
 
 #environment variable
 .env
+
+# vscode history
+.history
