@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App snapshot test 1`] = `
+<div
+  className="pf-c-page"
+>
+  <header
+    className="pf-c-page__header"
+  >
+    <div
+      className="pf-c-page__header-brand"
+    >
+      <a
+        className="pf-c-page__header-brand-link"
+        href="https://github.com/lingostack"
+        target="_blank"
+      >
+        LingoQA Dashboard
+      </a>
+    </div>
+  </header>
+  <main
+    className="pf-c-page__main"
+    tabIndex={-1}
+  >
+    <section
+      className="pf-c-page__main-section"
+    >
+      <div
+        className="pf-l-grid pf-m-all-6-col-on-sm pf-m-all-3-col-on-md pf-m-gutter"
+        gutter="lg"
+      />
+    </section>
+  </main>
+</div>
+`;

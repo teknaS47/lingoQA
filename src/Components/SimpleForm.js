@@ -11,8 +11,9 @@ import {
   Bullseye,
 } from "@patternfly/react-core";
 import SimpleEmptyState from "./SimpleEmptyState";
+import PropTypes from 'prop-types'
 
-export default function SimpleForm(props) {
+function SimpleForm(props) {
   const [selectProductsVersion, setSelectProductsVersion] = useState("");
   const [selectLocales, setSelectLocales] = useState("");
   return (
@@ -76,3 +77,15 @@ export default function SimpleForm(props) {
     </Bullseye>
   );
 }
+
+SimpleForm.propTypes={
+  handleSubmit: PropTypes.func,
+  selectProductsVersion: PropTypes.string,
+  handleVersionChange: PropTypes.func,
+  productsVersion: PropTypes.array,
+  selectLocales: PropTypes.string,
+  handleLocaleChange: PropTypes.func,
+  locales:PropTypes.array
+}
+
+export default SimpleForm

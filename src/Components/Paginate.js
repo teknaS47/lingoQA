@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Split, SplitItem } from "@patternfly/react-core";
 import { Pagination } from "@patternfly/react-core";
 import SimpleEmptyState from "./SimpleEmptyState";
-
-export default function Paginate(props) {
+import PropTypes from "prop-types";
+import Zoom from "react-medium-image-zoom";
+import "react-medium-image-zoom/dist/styles.css";
+import { AngleRightIcon, AngleLeftIcon } from "@patternfly/react-icons";
+function Paginate(props) {
   const [screenshotsOther, setScreenshotsOther] = useState([]);
   const [screenshotsEN, setScreenshotsEN] = useState([]);
   const [itemCount, setItemCount] = useState();
@@ -12,6 +15,9 @@ export default function Paginate(props) {
   const [offset, setOffset] = useState();
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [nextImg, setNextImg] = useState(false);
+  const [zoomImgIndex, setZoomImgIndex] = useState(0);
 
   //Set the page
   const onSetPage = (_event, pageNumber) => {
@@ -97,7 +103,11 @@ export default function Paginate(props) {
       />
       <div className="en_screens mb-4">
         {elementsLeft.map((image, index) => (
-          <img src={image} alt="" key={index} className="image" />
+          <div>
+            <Zoom zoomMargin={10} overlayBgColorEnd="RGBA(0,0,0,0.75)">
+              <img src={image} alt="" key={index} className="image" />
+            </Zoom>
+          </div>
         ))}
       </div>
       <Pagination
@@ -115,6 +125,18 @@ export default function Paginate(props) {
     </>
   );
 
+  const zoomIn = useCallback(() => {
+    setIsZoomed(true);
+  }, []);
+
+  const zoomOut = useCallback((event) => {
+    setIsZoomed(false);
+    event.preventDefault();
+  }, []);
+
+  const handleImageSwitch = () => {
+    setNextImg(!nextImg);
+  };
   const paginateOther = () => (
     <>
       <Pagination
@@ -137,7 +159,18 @@ export default function Paginate(props) {
               <SplitItem>
                 <div>
                   {elementsLeft.map((image, index) => (
-                    <img src={image} alt="" key={index} className="image" />
+                    <img
+                      style={{ cursor: "zoom-in" }}
+                      src={image}
+                      alt=""
+                      key={index}
+                      className="image"
+                      onClick={() => {
+                        setZoomImgIndex(index);
+                        zoomIn();
+                        setNextImg(false);
+                      }}
+                    />
                   ))}
                 </div>
               </SplitItem>
@@ -148,12 +181,70 @@ export default function Paginate(props) {
               <SplitItem>
                 <div>
                   {elementsRight.map((image, index) => (
-                    <img src={image} alt="" key={index} className="image" />
+                    <img
+                      style={{ cursor: "zoom-in" }}
+                      src={image}
+                      alt=""
+                      key={index}
+                      className="image"
+                      onClick={() => {
+                        setZoomImgIndex(index);
+                        zoomIn();
+                        setNextImg(true);
+                      }}
+                    />
                   ))}
                 </div>
               </SplitItem>
             )}
           </div>
+
+          {isZoomed ? (
+            <div>
+              <div className="zoomed_image_navigation">
+                <button
+                  style={{
+                    opacity: nextImg ? 1 : 0.5,
+                  }}
+                  disabled={!nextImg}
+                  onClick={handleImageSwitch}
+                >
+                  <AngleLeftIcon color="white" width={20} height="auto" />
+                </button>
+
+                <p>{nextImg ? 2 : 1} / 2</p>
+
+                <button
+                  style={{
+                    opacity: !nextImg ? 1 : 0.5,
+                  }}
+                  disabled={nextImg}
+                  onClick={handleImageSwitch}
+                >
+                  <AngleRightIcon color="white" width={20} height="auto" />
+                </button>
+              </div>
+
+              <div className="zoomed_image_container" onClick={zoomOut}>
+                {!nextImg ? (
+                  <img
+                    src={elementsLeft[zoomImgIndex]}
+                    alt=""
+                    key={zoomImgIndex}
+                    onClick={zoomOut}
+                  />
+                ) : (
+                  <img
+                    src={elementsRight[zoomImgIndex]}
+                    alt=""
+                    key={zoomImgIndex}
+                    onClick={zoomOut}
+                  />
+                )}
+              </div>
+            </div>
+          ) : null}
+          
         </Split>
       </div>
       <Pagination
@@ -189,3 +280,11 @@ export default function Paginate(props) {
     else return null;
   }
 }
+
+Paginate.propTypes = {
+  screenshotsEN: PropTypes.arrayOf(PropTypes.object),
+  screenshotsOther: PropTypes.arrayOf(PropTypes.object),
+  itemCount: PropTypes.number,
+};
+
+export default Paginate;

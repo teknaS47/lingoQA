@@ -12,8 +12,8 @@ export default function PageLayoutSimpleNav() {
   };
   return (
     <BrowserRouter>
-      <Page
-        header={<PageHeader logo={"LingoQA Dashboard"} logoProps={logoProps} />}
+      <Page 
+        header={<PageHeader style={{zIndex:100}} logo={"LingoQA Dashboard"} logoProps={logoProps} />}
       >
         <Switch>
           <Route exact path="/" component={Products} />
