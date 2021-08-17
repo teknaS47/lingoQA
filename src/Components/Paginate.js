@@ -1,11 +1,24 @@
 import React, { useCallback, useState } from "react";
-import { Split, SplitItem } from "@patternfly/react-core";
-import { Pagination } from "@patternfly/react-core";
+import {
+  ContextSelectorFooter,
+  Split,
+  SplitItem,
+} from "@patternfly/react-core";
+import {
+  Pagination,
+  Modal,
+  ModalVariant,
+  Button,
+} from "@patternfly/react-core";
 import SimpleEmptyState from "./SimpleEmptyState";
 import PropTypes from "prop-types";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
-import { AngleRightIcon, AngleLeftIcon } from "@patternfly/react-icons";
+import {
+  AngleRightIcon,
+  AngleLeftIcon,
+  InfoCircleIcon,
+} from "@patternfly/react-icons";
 function Paginate(props) {
   const [screenshotsOther, setScreenshotsOther] = useState([]);
   const [screenshotsEN, setScreenshotsEN] = useState([]);
@@ -18,6 +31,10 @@ function Paginate(props) {
   const [isZoomed, setIsZoomed] = useState(false);
   const [nextImg, setNextImg] = useState(false);
   const [zoomImgIndex, setZoomImgIndex] = useState(0);
+  const [redirectLink, setRedirectLink] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageColumn, setImageColumn] = useState(0);
 
   //Set the page
   const onSetPage = (_event, pageNumber) => {
@@ -58,6 +75,7 @@ function Paginate(props) {
     setScreenshotsEN(props.screenshotsEN);
     setItemCount(props.itemCount);
     setOffset(0);
+    setRedirectLink("Red Hat Enterprise Linux 8");
   }, [props.screenshotsEN, props.screenshotsOther, props.itemCount]);
 
   React.useEffect(() => {
@@ -101,12 +119,71 @@ function Paginate(props) {
         onFirstClick={onFirstClick}
         onLastClick={onLastClick}
       />
+
+      {/* To display the dialog for confirmation for redirection to Bugzilla */}
+
+      <Modal
+        variant={ModalVariant.small}
+        title="Report bug to Bugzilla?"
+        isOpen={isModalOpen}
+        onClose={handleModalToggle}
+        actions={[
+          <Button
+            key="confirm"
+            variant="primary"
+            onClick={() => {
+              redirect(currentImageIndex);
+              // handleModalToggle();
+            }}
+          >
+            Confirm
+          </Button>,
+          <Button key="cancel" variant="link" onClick={handleModalToggle}>
+            Cancel
+          </Button>,
+        ]}
+      >
+        This will redirect you to the Bugzilla form to report a bug. A link to
+        the current screenshot will be coppied to clipboard which you can paste
+        in the <strong>Attachment</strong> field.
+      </Modal>
+
+      {/* Click image to zoom information */}
+
+      <div
+        style={{
+          display: "flex",
+          alignContent: "center",
+          marginBottom: 20,
+          opacity: 0.5,
+        }}
+      >
+        <InfoCircleIcon color="black" width={20} height="auto" />
+
+        <h6 style={{ marginLeft: 5 }}>Click on image to zoom</h6>
+      </div>
+
       <div className="en_screens mb-4">
         {elementsLeft.map((image, index) => (
           <div>
-            <Zoom zoomMargin={10} overlayBgColorEnd="RGBA(0,0,0,0.75)">
-              <img src={image} alt="" key={index} className="image" />
-            </Zoom>
+            <div className="container" key={index}>
+              {/* Report a Bug button */}
+
+              <div
+                class="redirect"
+                onClick={() => {
+                  setCurrentImageIndex(index);
+                  setImageColumn(0);
+                  handleModalToggle();
+                }}
+              >
+                <div class="text">Report bug</div>
+              </div>
+
+              <Zoom zoomMargin={10} overlayBgColorEnd="RGBA(0,0,0,0.75)">
+                <img src={image} alt="" key={index} className="image" />
+              </Zoom>
+            </div>
           </div>
         ))}
       </div>
@@ -137,6 +214,28 @@ function Paginate(props) {
   const handleImageSwitch = () => {
     setNextImg(!nextImg);
   };
+
+  const redirect = (index) => {
+    setTimeout(async () => {
+      if (imageColumn === 0) {
+        const text = await navigator.clipboard.writeText(elementsLeft[index]);
+        console.log(text);
+      } else {
+        const text = await navigator.clipboard.writeText(elementsRight[index]);
+        console.log(text);
+      }
+      window.open(
+        `https://bugzilla.redhat.com/enter_bug.cgi?product=${redirectLink}`,
+        "_blank"
+      );
+      handleModalToggle();
+    }, 1);
+  };
+
+  const handleModalToggle = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   const paginateOther = () => (
     <>
       <Pagination
@@ -151,7 +250,52 @@ function Paginate(props) {
         onFirstClick={onFirstClick}
         onLastClick={onLastClick}
       />
+
+      {/* To display the dialog for confirmation for redirection to Bugzilla */}
+
+      <Modal
+        variant={ModalVariant.small}
+        title="Report bug to Bugzilla?"
+        isOpen={isModalOpen}
+        onClose={handleModalToggle}
+        actions={[
+          <Button
+            key="confirm"
+            variant="primary"
+            onClick={() => {
+              redirect(currentImageIndex);
+              // handleModalToggle();
+            }}
+          >
+            Confirm
+          </Button>,
+          <Button key="cancel" variant="link" onClick={handleModalToggle}>
+            Cancel
+          </Button>,
+        ]}
+      >
+        This will redirect you to the Bugzilla form to report a bug. A link to
+        the current screenshot will be coppied to clipboard which you can paste
+        in the <strong>Attachment</strong> field.
+      </Modal>
+
+      {/* Click image to zoom information */}
+
+      <div
+        style={{
+          display: "flex",
+          alignContent: "center",
+          marginBottom: 20,
+          opacity: 0.5,
+        }}
+      >
+        <InfoCircleIcon color="black" width={20} height="auto" />
+
+        <h6 style={{ marginLeft: 5 }}>Click on image to zoom</h6>
+      </div>
+
       {/* For screenshots display side by side */}
+
       <div id="image-compare">
         <Split hasGutter gutter="md">
           <div>
@@ -159,18 +303,34 @@ function Paginate(props) {
               <SplitItem>
                 <div>
                   {elementsLeft.map((image, index) => (
-                    <img
-                      style={{ cursor: "zoom-in" }}
-                      src={image}
-                      alt=""
-                      key={index}
-                      className="image"
-                      onClick={() => {
-                        setZoomImgIndex(index);
-                        zoomIn();
-                        setNextImg(false);
-                      }}
-                    />
+                    <div className="container" key={index}>
+                      {/* Report a Bug button */}
+
+                      <div
+                        class="redirect"
+                        onClick={() => {
+                          setCurrentImageIndex(index);
+                          setImageColumn(0);
+                          handleModalToggle();
+                        }}
+                      >
+                        <div class="text">Report bug</div>
+                      </div>
+
+                      <img
+                        style={{ cursor: "zoom-in" }}
+                        src={image}
+                        alt=""
+                        key={index}
+                        id={index}
+                        className="image"
+                        onClick={() => {
+                          setZoomImgIndex(index);
+                          zoomIn();
+                          setNextImg(false);
+                        }}
+                      />
+                    </div>
                   ))}
                 </div>
               </SplitItem>
@@ -181,23 +341,41 @@ function Paginate(props) {
               <SplitItem>
                 <div>
                   {elementsRight.map((image, index) => (
-                    <img
-                      style={{ cursor: "zoom-in" }}
-                      src={image}
-                      alt=""
-                      key={index}
-                      className="image"
-                      onClick={() => {
-                        setZoomImgIndex(index);
-                        zoomIn();
-                        setNextImg(true);
-                      }}
-                    />
+                    <div>
+                      <div className="container" key={index}>
+                        {/* Report a Bug button */}
+
+                        <div
+                          class="redirect"
+                          onClick={() => {
+                            setCurrentImageIndex(index);
+                            setImageColumn(1);
+                            handleModalToggle();
+                          }}
+                        >
+                          <div class="text">Report bug</div>
+                        </div>
+                        <img
+                          style={{ cursor: "zoom-in" }}
+                          src={image}
+                          alt=""
+                          key={index}
+                          className="image"
+                          onClick={() => {
+                            setZoomImgIndex(index);
+                            zoomIn();
+                            setNextImg(true);
+                          }}
+                        />
+                      </div>
+                    </div>
                   ))}
                 </div>
               </SplitItem>
             )}
           </div>
+
+          {/* Zoomed image view */}
 
           {isZoomed ? (
             <div>
@@ -244,7 +422,6 @@ function Paginate(props) {
               </div>
             </div>
           ) : null}
-          
         </Split>
       </div>
       <Pagination

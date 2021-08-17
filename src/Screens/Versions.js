@@ -25,6 +25,9 @@ export default function Versions(props) {
   const [screenshotsEN, setScreenshotsEN] = useState([]);
   const [itemCount, setItemCount] = useState();
   const [previousProductId] = useState(props.match.params.productid);
+  // const [previousProductsVersion,setPreviousProductsVersion] = useState("");
+  // const [previousLocales,setPreviousLocales] = useState("");
+
   let history = useHistory();
 
   function handleDropdownChangeVersion(e) {
@@ -34,6 +37,14 @@ export default function Versions(props) {
   function handleDropdownChangeLocale(e) {
     setSelectLocales(e);
   }
+
+  // React.useEffect(() => {
+  //   const previousLocalesS = (localStorage.getItem("previousLocalesS") || "")
+  //   setPreviousLocales(previousLocalesS)
+
+  //   const previousProductsVersionS = (localStorage.getItem("previousProductsVersionS") || "")
+  //   setPreviousProductsVersion(previousProductsVersionS)
+  // }, [])
 
   //To get Versions and Locales of selected Product
   React.useEffect(() => {
@@ -48,6 +59,11 @@ export default function Versions(props) {
         console.error(e);
       });
 
+      // console.log(previousLocales,previousProductsVersion)
+
+      // localStorage.setItem("previousLocalesS", previousLocales)
+      // localStorage.setItem("previousProductsVersionS", previousProductsVersion)
+
       //Return to Products if no version for selected Product is available
       if (productsVersionData.data.length !== 0) {
         setProductsVersion(productsVersionData.data);
@@ -60,9 +76,35 @@ export default function Versions(props) {
           pathname: "/",
         });
       }
+
+
+      // if (previousProductsVersion !== "" && previousLocales !== "") {
+      //   const screenshotsData = await axios(`${BASE_URL}/screenshots`, {
+      //     params: {
+      //       product_version_id: previousProductsVersion,
+      //       locale_id: previousLocales,
+      //     },
+      //   });
+      //   const screenshotsENData = await axios(`${BASE_URL}/screenshots`, {
+      //     params: {
+      //       product_version_id: previousProductsVersion,
+      //       locale_id: constant.englishLocaleId,
+      //     },
+      //   });
+
+      //   if (!screenshotsENData.data.length) {
+      //     alert("The selected Version have no English Screenshots");
+      //   } else {
+      //     setScreenshotsOther(screenshotsData.data);
+      //     setScreenshotsEN(screenshotsENData.data);
+      //     setItemCount(screenshotsENData.data[0].images.length);
+      //   }
+      // }
+
+
     };
     fetchProductsVersionData();
-  }, [previousProductId, history]);
+  }, [previousProductId, history, selectProductsVersion, selectLocales]);
 
   // To get selected Version and Locale to get screenshots
   const onFormSubmit = async (event) => {
@@ -80,6 +122,14 @@ export default function Versions(props) {
           locale_id: constant.englishLocaleId,
         },
       });
+
+
+      // setPreviousProductsVersion(selectProductsVersion);
+      // setPreviousLocales(selectLocales);
+
+      // console.log(selectLocales,selectProductsVersion,previousLocales.previousProductsVersion)
+
+      
       if (!screenshotsENData.data.length) {
         alert("The selected Version have no English Screenshots");
       } else {

@@ -11,6 +11,7 @@
 .image {
   height: 50vh;
   width: auto;
+  transition: .5s ease;
 }
 
 @keyframes zoom {
@@ -50,9 +51,6 @@
   margin: auto;
   z-index: 200;
   cursor: zoom-out;
-  animation-name: zoom;
-  animation-timing-function: ease-in-out;
-  animation-duration: 0.5s;
 }
 
 .zoomed_image_navigation {
@@ -83,10 +81,31 @@
   opacity:1;
 } */
 
-.image:hover {
-  /* transform: translateX(5px); */
-  opacity: .75;
+.container{
+  opacity: 1;
+  cursor: pointer;
+}
+.container:hover .image {
+  opacity: 0.75;
+}
 
+.container:hover .redirect {
+  opacity: 1;
+}
+.redirect {
+    transition: .5s ease;
+    opacity: 0;
+    width: auto;
+    float:right;
+    left: auto;
+    text-align: center;
+}
+.text {
+
+  background-color: #04AA6D;
+  color: white;
+  font-size: 16px;
+  padding: 16px 32px;
 }
 
 .en_screens {
