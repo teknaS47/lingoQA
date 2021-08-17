@@ -5,7 +5,7 @@ import SimpleEmptyState from "./SimpleEmptyState";
 import PropTypes from "prop-types";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
-import { AngleRightIcon, AngleLeftIcon } from "@patternfly/react-icons";
+import { AngleRightIcon, AngleLeftIcon, InfoCircleIcon } from "@patternfly/react-icons";
 function Paginate(props) {
   const [screenshotsOther, setScreenshotsOther] = useState([]);
   const [screenshotsEN, setScreenshotsEN] = useState([]);
@@ -101,6 +101,22 @@ function Paginate(props) {
         onFirstClick={onFirstClick}
         onLastClick={onLastClick}
       />
+
+      {/* Click image to zoom information */}
+  
+      <div
+          style={{
+            display: "flex",
+            alignContent: "center",
+            marginBottom: 20,
+            opacity: 0.5,
+          }}
+        >
+          <InfoCircleIcon color="black" width={20} height="auto" />
+  
+          <h6 style={{ marginLeft: 5 }}>Click on image to zoom</h6>
+        </div>
+
       <div className="en_screens mb-4">
         {elementsLeft.map((image, index) => (
           <div>
@@ -151,6 +167,23 @@ function Paginate(props) {
         onFirstClick={onFirstClick}
         onLastClick={onLastClick}
       />
+
+      {/* Click image to zoom information */}
+  
+      <div
+          style={{
+            display: "flex",
+            alignContent: "center",
+            marginBottom: 20,
+            opacity: 0.5,
+          }}
+        >
+          <InfoCircleIcon color="black" width={20} height="auto" />
+  
+          <h6 style={{ marginLeft: 5 }}>Click on image to zoom</h6>
+        </div>
+
+
       {/* For screenshots display side by side */}
       <div id="image-compare">
         <Split hasGutter gutter="md">
