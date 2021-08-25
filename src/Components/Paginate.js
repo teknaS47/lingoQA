@@ -31,10 +31,10 @@ function Paginate(props) {
   const [isZoomed, setIsZoomed] = useState(false);
   const [nextImg, setNextImg] = useState(false);
   const [zoomImgIndex, setZoomImgIndex] = useState(0);
-  const [redirectLink, setRedirectLink] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imageColumn, setImageColumn] = useState(0);
+  const [bugzillaProductName, setBugzillaProductName] = useState("");
 
   //Set the page
   const onSetPage = (_event, pageNumber) => {
@@ -71,12 +71,17 @@ function Paginate(props) {
   };
 
   React.useEffect(() => {
+    setBugzillaProductName(props.bugzillaProductName);
     setScreenshotsOther(props.screenshotsOther);
     setScreenshotsEN(props.screenshotsEN);
     setItemCount(props.itemCount);
     setOffset(0);
-    setRedirectLink("Red Hat Enterprise Linux 8");
-  }, [props.screenshotsEN, props.screenshotsOther, props.itemCount]);
+  }, [
+    props.screenshotsEN,
+    props.screenshotsOther,
+    props.itemCount,
+    props.bugzillaProductName,
+  ]);
 
   React.useEffect(() => {
     const SetImages = () => {
@@ -225,7 +230,7 @@ function Paginate(props) {
         console.log(text);
       }
       window.open(
-        `https://bugzilla.redhat.com/enter_bug.cgi?product=${redirectLink}`,
+        `https://bugzilla.redhat.com/enter_bug.cgi?product=${bugzillaProductName}`,
         "_blank"
       );
       handleModalToggle();
@@ -274,9 +279,20 @@ function Paginate(props) {
           </Button>,
         ]}
       >
-        This will redirect you to the Bugzilla form to report a bug. A link to
-        the current screenshot will be coppied to clipboard which you can paste
-        in the <strong>Attachment</strong> field.
+        {bugzillaProductName === "" ? (
+          <p>
+            <p style={{color: "red"}}>This product is not available on Bugzilla. </p><br/>You will be redirected to
+            Bugzilla to report a bug. A link to the current screenshot will be
+            coppied to clipboard which you can paste in the{" "}
+            <strong>Attachment</strong> field.
+          </p>
+        ) : (
+          <p>
+            You will be redirected to Bugzilla to report a bug. A link to the
+            current screenshot will be coppied to clipboard which you can paste
+            in the <strong>Attachment</strong> field.
+          </p>
+        )}
       </Modal>
 
       {/* Click image to zoom information */}

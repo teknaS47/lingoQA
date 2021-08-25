@@ -25,6 +25,7 @@ export default function Versions(props) {
   const [screenshotsEN, setScreenshotsEN] = useState([]);
   const [itemCount, setItemCount] = useState();
   const [previousProductId] = useState(props.match.params.productid);
+  const [bugzillaProductName,setBugzillaProductName] = useState("")
   // const [previousProductsVersion,setPreviousProductsVersion] = useState("");
   // const [previousLocales,setPreviousLocales] = useState("");
 
@@ -109,6 +110,13 @@ export default function Versions(props) {
   // To get selected Version and Locale to get screenshots
   const onFormSubmit = async (event) => {
     event.preventDefault();
+
+    const bugzillaProductName = await axios(`${BASE_URL}/bugzilla_product_names`, {
+      params: {
+        id: selectProductsVersion,
+      },
+    });
+    
     try {
       const screenshotsData = await axios(`${BASE_URL}/screenshots`, {
         params: {
@@ -133,6 +141,7 @@ export default function Versions(props) {
       if (!screenshotsENData.data.length) {
         alert("The selected Version have no English Screenshots");
       } else {
+        setBugzillaProductName(bugzillaProductName.data)
         setScreenshotsOther(screenshotsData.data);
         setScreenshotsEN(screenshotsENData.data);
         setItemCount(screenshotsENData.data[0].images.length);
@@ -168,6 +177,7 @@ export default function Versions(props) {
         {(screenshotsOther && screenshotsOther.length !== 0) ||
         (screenshotsEN && screenshotsEN.length !== 0) ? (
           <Paginate
+            bugzillaProductName={bugzillaProductName}
             screenshotsOther={screenshotsOther}
             screenshotsEN={screenshotsEN}
             itemCount={itemCount}
