@@ -12,7 +12,13 @@ Rails.application.routes.draw do
       resources :product_versions,  only: [:index] do
         resources :screenshots,  only: [:index, :new, :create]
       end
-      resources :bugzilla_product_names, only: [:index, :show] 
+      resources :bugzilla_product_names, only: [:index] 
+      # do
+      #   resources :product_versions, only: [:index, :new, :create]
+      end
+      resources :product_versions,  only: [:index] do
+        resources :bugzilla_product_names,  only: [:index, :new, :create]
+      end
     end
   end
 end
