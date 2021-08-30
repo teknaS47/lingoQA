@@ -1,9 +1,5 @@
 import React, { useCallback, useState } from "react";
-import {
-  ContextSelectorFooter,
-  Split,
-  SplitItem,
-} from "@patternfly/react-core";
+import { Split, SplitItem } from "@patternfly/react-core";
 import {
   Pagination,
   Modal,
@@ -19,6 +15,7 @@ import {
   AngleLeftIcon,
   InfoCircleIcon,
 } from "@patternfly/react-icons";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 function Paginate(props) {
   const [screenshotsOther, setScreenshotsOther] = useState([]);
   const [screenshotsEN, setScreenshotsEN] = useState([]);
@@ -133,24 +130,43 @@ function Paginate(props) {
         isOpen={isModalOpen}
         onClose={handleModalToggle}
         actions={[
-          <Button
-            key="confirm"
-            variant="primary"
-            onClick={() => {
-              redirect(currentImageIndex);
-              // handleModalToggle();
-            }}
+          <CopyToClipboard
+          text = {elementsLeft[currentImageIndex]}
+          onCopy ={() => {redirect()}}
           >
-            Confirm
-          </Button>,
+            <Button
+              key="confirm"
+              variant="primary"
+              // onClick={() => {
+              //   redirect(currentImageIndex);
+              //   // handleModalToggle();
+              // }}
+            >
+              Confirm
+            </Button>
+          </CopyToClipboard>,
           <Button key="cancel" variant="link" onClick={handleModalToggle}>
             Cancel
           </Button>,
         ]}
       >
-        This will redirect you to the Bugzilla form to report a bug. A link to
-        the current screenshot will be coppied to clipboard which you can paste
-        in the <strong>Attachment</strong> field.
+        {bugzillaProductName === "" ? (
+          <p>
+            <p style={{ color: "red" }}>
+              This product is not available on Bugzilla.{" "}
+            </p>
+            <br />
+            You will be redirected to Bugzilla to report a bug. A link to the
+            current screenshot will be coppied to clipboard which you can paste
+            in the <strong>Attachment</strong> field.
+          </p>
+        ) : (
+          <p>
+            You will be redirected to Bugzilla to report a bug. A link to the
+            current screenshot will be coppied to clipboard which you can paste
+            in the <strong>Attachment</strong> field.
+          </p>
+        )}
       </Modal>
 
       {/* Click image to zoom information */}
@@ -221,20 +237,20 @@ function Paginate(props) {
   };
 
   const redirect = (index) => {
-    setTimeout(async () => {
-      if (imageColumn === 0) {
-        const text = await navigator.clipboard.writeText(elementsLeft[index]);
-        console.log(text);
-      } else {
-        const text = await navigator.clipboard.writeText(elementsRight[index]);
-        console.log(text);
-      }
+    // setTimeout(async () => {
+    //   if (imageColumn === 0) {
+    //     const text = await navigator.clipboard.writeText(elementsLeft[index]);
+    //     console.log(text);
+    //   } else {
+    //     const text = await navigator.clipboard.writeText(elementsRight[index]);
+    //     console.log(text);
+    //   }
       window.open(
         `https://bugzilla.redhat.com/enter_bug.cgi?product=${bugzillaProductName}`,
         "_blank"
       );
       handleModalToggle();
-    }, 1);
+    // }, 1);
   };
 
   const handleModalToggle = () => {
@@ -264,16 +280,21 @@ function Paginate(props) {
         isOpen={isModalOpen}
         onClose={handleModalToggle}
         actions={[
-          <Button
-            key="confirm"
-            variant="primary"
-            onClick={() => {
-              redirect(currentImageIndex);
-              // handleModalToggle();
-            }}
+          <CopyToClipboard
+          text = {imageColumn === 0? elementsLeft[currentImageIndex] : elementsRight[currentImageIndex]}
+          onCopy ={() => {redirect()}}
           >
-            Confirm
-          </Button>,
+            <Button
+              key="confirm"
+              variant="primary"
+              // onClick={() => {
+              //   redirect(currentImageIndex);
+              //   // handleModalToggle();
+              // }}
+            >
+              Confirm
+            </Button>
+          </CopyToClipboard>,
           <Button key="cancel" variant="link" onClick={handleModalToggle}>
             Cancel
           </Button>,
@@ -281,10 +302,13 @@ function Paginate(props) {
       >
         {bugzillaProductName === "" ? (
           <p>
-            <p style={{color: "red"}}>This product is not available on Bugzilla. </p><br/>You will be redirected to
-            Bugzilla to report a bug. A link to the current screenshot will be
-            coppied to clipboard which you can paste in the{" "}
-            <strong>Attachment</strong> field.
+            <p style={{ color: "red" }}>
+              This product is not available on Bugzilla.{" "}
+            </p>
+            <br />
+            You will be redirected to Bugzilla to report a bug. A link to the
+            current screenshot will be coppied to clipboard which you can paste
+            in the <strong>Attachment</strong> field.
           </p>
         ) : (
           <p>
