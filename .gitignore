@@ -36,3 +36,4 @@ app/jobs/*
 app/mailers/*
 app/channels/*
 /config/credentials/*.key
+.history
