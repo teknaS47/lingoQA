@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import BASE_URL from "../API/BASE_URL";
 import axios from "axios";
 import {
@@ -21,6 +21,13 @@ export default function Products() {
     };
     fetchProductsData();
   }, []);
+
+  const tokenString = localStorage.getItem('token');
+
+  if(!tokenString)
+  {
+    return (<Redirect to="/login"/>)
+  }
 
   return (
     <PageSection>

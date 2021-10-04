@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Split, SplitItem } from "@patternfly/react-core";
+import { Split, SplitItem, Alert } from "@patternfly/react-core";
 import {
   Pagination,
   Modal,
@@ -32,6 +32,7 @@ function Paginate(props) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imageColumn, setImageColumn] = useState(0);
   const [bugzillaProductName, setBugzillaProductName] = useState("");
+  const [copyAlert, setCopyAlert] = useState(false);
 
   //Set the page
   const onSetPage = (_event, pageNumber) => {
@@ -122,6 +123,16 @@ function Paginate(props) {
         onLastClick={onLastClick}
       />
 
+      
+      <div style={{ position: "fixed", zIndex: 10000, width: "97%", top: 50 }}>
+        {copyAlert ? (
+           <Alert
+           variant="success"
+           title="Image link coppied successfully"
+         />
+        ) : null}
+      </div>
+
       {/* To display the dialog for confirmation for redirection to Bugzilla */}
 
       <Modal
@@ -131,8 +142,10 @@ function Paginate(props) {
         onClose={handleModalToggle}
         actions={[
           <CopyToClipboard
-          text = {elementsLeft[currentImageIndex]}
-          onCopy ={() => {redirect()}}
+            text={elementsLeft[currentImageIndex]}
+            onCopy={() => {
+              redirect();
+            }}
           >
             <Button
               key="confirm"
@@ -191,7 +204,7 @@ function Paginate(props) {
               {/* Report a Bug button */}
 
               <div
-                class="redirect"
+                className="redirect"
                 onClick={() => {
                   setCurrentImageIndex(index);
                   setImageColumn(0);
@@ -200,6 +213,20 @@ function Paginate(props) {
               >
                 <div class="text">Report bug</div>
               </div>
+
+              <CopyToClipboard
+                text={elementsLeft[currentImageIndex]}
+                onCopy={() => {
+                  setCopyAlert(true);
+                  setTimeout(() => {
+                    setCopyAlert(false);
+                  }, 2000);
+                }}
+              >
+                <div className="copyLink">
+                  <div class="text">Copy Link</div>
+                </div>
+              </CopyToClipboard>
 
               <Zoom zoomMargin={10} overlayBgColorEnd="RGBA(0,0,0,0.75)">
                 <img src={image} alt="" key={index} className="image" />
@@ -245,11 +272,11 @@ function Paginate(props) {
     //     const text = await navigator.clipboard.writeText(elementsRight[index]);
     //     console.log(text);
     //   }
-      window.open(
-        `https://bugzilla.redhat.com/enter_bug.cgi?product=${bugzillaProductName}`,
-        "_blank"
-      );
-      handleModalToggle();
+    window.open(
+      `https://bugzilla.redhat.com/enter_bug.cgi?product=${bugzillaProductName}`,
+      "_blank"
+    );
+    handleModalToggle();
     // }, 1);
   };
 
@@ -272,6 +299,15 @@ function Paginate(props) {
         onLastClick={onLastClick}
       />
 
+      <div style={{ position: "fixed", zIndex: 10000, width: "97%", top: 50 }}>
+        {copyAlert ? (
+           <Alert
+           variant="success"
+           title="Image link coppied successfully"
+         />
+        ) : null}
+      </div>
+
       {/* To display the dialog for confirmation for redirection to Bugzilla */}
 
       <Modal
@@ -281,8 +317,14 @@ function Paginate(props) {
         onClose={handleModalToggle}
         actions={[
           <CopyToClipboard
-          text = {imageColumn === 0? elementsLeft[currentImageIndex] : elementsRight[currentImageIndex]}
-          onCopy ={() => {redirect()}}
+            text={
+              imageColumn === 0
+                ? elementsLeft[currentImageIndex]
+                : elementsRight[currentImageIndex]
+            }
+            onCopy={() => {
+              redirect();
+            }}
           >
             <Button
               key="confirm"
@@ -357,6 +399,20 @@ function Paginate(props) {
                         <div class="text">Report bug</div>
                       </div>
 
+                      <CopyToClipboard
+                        text={elementsLeft[currentImageIndex]}
+                        onCopy={() => {
+                          setCopyAlert(true);
+                          setTimeout(() => {
+                            setCopyAlert(false);
+                          }, 2000);
+                        }}
+                      >
+                        <div className="copyLink">
+                          <div class="text">Copy Link</div>
+                        </div>
+                      </CopyToClipboard>
+
                       <img
                         style={{ cursor: "zoom-in" }}
                         src={image}
@@ -395,6 +451,21 @@ function Paginate(props) {
                         >
                           <div class="text">Report bug</div>
                         </div>
+
+                        <CopyToClipboard
+                          text={elementsRight[currentImageIndex]}
+                          onCopy={() => {
+                            setCopyAlert(true);
+                            setTimeout(() => {
+                              setCopyAlert(false);
+                            }, 2000);
+                          }}
+                        >
+                          <div className="copyLink">
+                            <div class="text">Copy Link</div>
+                          </div>
+                        </CopyToClipboard>
+
                         <img
                           style={{ cursor: "zoom-in" }}
                           src={image}
