@@ -2,27 +2,28 @@
 
 module Api
   module V1
-    # Controller methods for product model
-    class ProductsController < ApplicationController
+    # Controller methods for locales model
+    class LocalesController < ApplicationController
       def index
-        @products = Product.all
-        render json: @products
+        @locales = Locale.all
+        render json: @locales
       end
 
       def new
-        product = Product.new
+        locale = Locale.new
       end
 
       def create
-        product = Product.new(product_name_params)
-        product.save!
+        locale = Locale.new(locale_name_params)
+        locale.save!
         rescue ActiveRecord::RecordInvalid => invalid
           render json: { errors: invalid.record.errors }
       end
 
-      def product_name_params
+      def locale_name_params
         params.permit(:name)
       end
+      
     end
   end
 end

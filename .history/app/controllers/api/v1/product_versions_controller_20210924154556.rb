@@ -2,11 +2,12 @@
 
 module Api
   module V1
-    # Controller methods for product model
-    class ProductsController < ApplicationController
+    # Controller methods for product_version model
+    class ProductVersionsController < ApplicationController
+      before_action :product
       def index
-        @products = Product.all
-        render json: @products
+        @versions = @product.product_versions
+        render json: @versions
       end
 
       def new
@@ -22,6 +23,11 @@ module Api
 
       def product_name_params
         params.permit(:name)
+      end
+      
+      private
+      def product
+        @product = Product.find(params[:product_id])
       end
     end
   end

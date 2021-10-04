@@ -16,7 +16,7 @@ module Api
       end
 
       def create
-        version = ProductVersion.new(version_name_params)
+        versopm = ProductVersion.new(version_name_params)
         version.save!
         rescue ActiveRecord::RecordInvalid => invalid
           render json: { errors: invalid.record.errors }
@@ -30,11 +30,6 @@ module Api
       def product
         @product = Product.find(params[:product_id])
       end
-
-      # def bugzilla_product_names
-      #   @bugzilla_product_names = BugzillaProductName.find(params[:bugzilla_product_names_id])
-      # end
-
     end
   end
 end

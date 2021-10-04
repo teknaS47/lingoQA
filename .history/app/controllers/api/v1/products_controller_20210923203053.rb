@@ -8,20 +8,11 @@ module Api
         @products = Product.all
         render json: @products
       end
-
-      def new
-        product = Product.new
-      end
-
       def create
-        product = Product.new(product_name_params)
-        product.save!
+        name = Product.new(screenshot_params)
+        screenshot.save!
         rescue ActiveRecord::RecordInvalid => invalid
           render json: { errors: invalid.record.errors }
-      end
-
-      def product_name_params
-        params.permit(:name)
       end
     end
   end

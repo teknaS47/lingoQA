@@ -21,6 +21,9 @@ module Api
         end
       end
 
+      def show
+        screenshots = Screenshot.all
+
       def new
         screenshot = Screenshot.new
       end
@@ -34,7 +37,7 @@ module Api
 
       private
       def screenshot_params
-        params.permit(:name, :locale_id, :product_version_id, images: [])
+        params.require(:screenshot).permit(:name, :locale_id, :product_version_id, images: [])
       end
 
       def product_version

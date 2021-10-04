@@ -14,14 +14,14 @@ module Api
       end
 
       def create
-        product = Product.new(product_name_params)
+        name = Product.new(params[:product])
         product.save!
         rescue ActiveRecord::RecordInvalid => invalid
           render json: { errors: invalid.record.errors }
       end
 
       def product_name_params
-        params.permit(:name)
+        params.require(:product).permit(:name)
       end
     end
   end

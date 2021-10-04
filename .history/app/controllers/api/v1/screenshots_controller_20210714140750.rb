@@ -34,7 +34,7 @@ module Api
 
       private
       def screenshot_params
-        params.permit(:name, :locale_id, :product_version_id, images: [])
+        params.require(:screenshot).permit(:name, :locale_id, :product_version_id, images: [])
       end
 
       def product_version

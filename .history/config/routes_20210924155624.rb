@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   namespace 'api' do
     namespace 'v1' do
       resources :products ,only:[:create]
-      resources :locales, only: [:index, :create]
+      resources :locales, only: [:index]
       resources :screenshots,  only: [:index, :new, :create]
       resources :products , only: [:index] do
         resources :product_versions, only: [:index, :create]

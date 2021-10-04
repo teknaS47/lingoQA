@@ -30,11 +30,6 @@ module Api
       def product
         @product = Product.find(params[:product_id])
       end
-
-      # def bugzilla_product_names
-      #   @bugzilla_product_names = BugzillaProductName.find(params[:bugzilla_product_names_id])
-      # end
-
     end
   end
 end

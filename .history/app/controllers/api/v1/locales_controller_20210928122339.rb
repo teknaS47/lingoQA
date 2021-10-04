@@ -2,11 +2,11 @@
 
 module Api
   module V1
-    # Controller methods for product model
-    class ProductsController < ApplicationController
+    # Controller methods for locales model
+    class LocalesController < ApplicationController
       def index
-        @products = Product.all
-        render json: @products
+        @locales = Locale.all
+        render json: @locales
       end
 
       def new
@@ -23,6 +23,7 @@ module Api
       def product_name_params
         params.permit(:name)
       end
+      
     end
   end
 end

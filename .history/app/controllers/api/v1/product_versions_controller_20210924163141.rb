@@ -23,7 +23,7 @@ module Api
       end
 
       def version_name_params
-        params.permit(:name, :product_id)
+        params.permit(:name, :product_id, :bugzilla_product_names_id)
       end
 
       private
@@ -31,9 +31,7 @@ module Api
         @product = Product.find(params[:product_id])
       end
 
-      # def bugzilla_product_names
-      #   @bugzilla_product_names = BugzillaProductName.find(params[:bugzilla_product_names_id])
-      # end
+      
 
     end
   end

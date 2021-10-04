@@ -21,7 +21,7 @@ module Api
       end
 
       def locale_name_params
-        params.permit(:language, :code)
+        params.permit(:language,:code)
       end
       
     end
