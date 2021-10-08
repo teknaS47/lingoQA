@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import BASE_URL from "../API/BASE_URL";
 import axios from "axios";
 import {
@@ -14,11 +14,14 @@ import {
 
 export default function Products() {
   const [products, setProducts] = useState([]);
+
+  const fetchProductsData = async () => {
+    const ProductsData = await axios(`${BASE_URL}/products`);
+    setProducts(ProductsData.data);
+  };
+  
   React.useEffect(() => {
-    const fetchProductsData = async () => {
-      const ProductsData = await axios(`${BASE_URL}/products`);
-      setProducts(ProductsData.data);
-    };
+    
     fetchProductsData();
   }, []);
 

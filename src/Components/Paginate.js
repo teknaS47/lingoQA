@@ -150,10 +150,6 @@ function Paginate(props) {
             <Button
               key="confirm"
               variant="primary"
-              // onClick={() => {
-              //   redirect(currentImageIndex);
-              //   // handleModalToggle();
-              // }}
             >
               Confirm
             </Button>
@@ -192,15 +188,15 @@ function Paginate(props) {
           opacity: 0.5,
         }}
       >
-        <InfoCircleIcon color="black" width={20} height="auto" />
+        <InfoCircleIcon color="black" width={20} height={"auto"} />
 
         <h6 style={{ marginLeft: 5 }}>Click on image to zoom</h6>
       </div>
 
       <div className="en_screens mb-4">
         {elementsLeft.map((image, index) => (
-          <div>
-            <div className="container" key={index}>
+          <div key={index}>
+            <div className="container" >
               {/* Report a Bug button */}
 
               <div
@@ -211,11 +207,11 @@ function Paginate(props) {
                   handleModalToggle();
                 }}
               >
-                <div class="text">Report bug</div>
+                <div className="text">Report bug</div>
               </div>
 
               <CopyToClipboard
-                text={elementsLeft[currentImageIndex]}
+                text={elementsLeft[index]}
                 onCopy={() => {
                   setCopyAlert(true);
                   setTimeout(() => {
@@ -224,7 +220,7 @@ function Paginate(props) {
                 }}
               >
                 <div className="copyLink">
-                  <div class="text">Copy Link</div>
+                  <div className="text">Copy Link</div>
                 </div>
               </CopyToClipboard>
 
@@ -264,20 +260,11 @@ function Paginate(props) {
   };
 
   const redirect = (index) => {
-    // setTimeout(async () => {
-    //   if (imageColumn === 0) {
-    //     const text = await navigator.clipboard.writeText(elementsLeft[index]);
-    //     console.log(text);
-    //   } else {
-    //     const text = await navigator.clipboard.writeText(elementsRight[index]);
-    //     console.log(text);
-    //   }
     window.open(
       `https://bugzilla.redhat.com/enter_bug.cgi?product=${bugzillaProductName}`,
       "_blank"
     );
     handleModalToggle();
-    // }, 1);
   };
 
   const handleModalToggle = () => {
@@ -329,10 +316,6 @@ function Paginate(props) {
             <Button
               key="confirm"
               variant="primary"
-              // onClick={() => {
-              //   redirect(currentImageIndex);
-              //   // handleModalToggle();
-              // }}
             >
               Confirm
             </Button>
@@ -371,7 +354,7 @@ function Paginate(props) {
           opacity: 0.5,
         }}
       >
-        <InfoCircleIcon color="black" width={20} height="auto" />
+        <InfoCircleIcon color="black" width={20} height={"auto"} />
 
         <h6 style={{ marginLeft: 5 }}>Click on image to zoom</h6>
       </div>
@@ -389,18 +372,19 @@ function Paginate(props) {
                       {/* Report a Bug button */}
 
                       <div
-                        class="redirect"
+                      key={index}
+                        className="redirect"
                         onClick={() => {
                           setCurrentImageIndex(index);
                           setImageColumn(0);
                           handleModalToggle();
                         }}
                       >
-                        <div class="text">Report bug</div>
+                        <div className="text">Report bug</div>
                       </div>
 
                       <CopyToClipboard
-                        text={elementsLeft[currentImageIndex]}
+                        text={elementsLeft[index]}
                         onCopy={() => {
                           setCopyAlert(true);
                           setTimeout(() => {
@@ -409,7 +393,7 @@ function Paginate(props) {
                         }}
                       >
                         <div className="copyLink">
-                          <div class="text">Copy Link</div>
+                          <div className="text">Copy Link</div>
                         </div>
                       </CopyToClipboard>
 
@@ -417,7 +401,6 @@ function Paginate(props) {
                         style={{ cursor: "zoom-in" }}
                         src={image}
                         alt=""
-                        key={index}
                         id={index}
                         className="image"
                         onClick={() => {
@@ -442,18 +425,19 @@ function Paginate(props) {
                         {/* Report a Bug button */}
 
                         <div
-                          class="redirect"
+                        key={index}
+                          className="redirect"
                           onClick={() => {
                             setCurrentImageIndex(index);
                             setImageColumn(1);
                             handleModalToggle();
                           }}
                         >
-                          <div class="text">Report bug</div>
+                          <div className="text">Report bug</div>
                         </div>
 
                         <CopyToClipboard
-                          text={elementsRight[currentImageIndex]}
+                          text={elementsRight[index]}
                           onCopy={() => {
                             setCopyAlert(true);
                             setTimeout(() => {
@@ -462,7 +446,7 @@ function Paginate(props) {
                           }}
                         >
                           <div className="copyLink">
-                            <div class="text">Copy Link</div>
+                            <div className="text">Copy Link</div>
                           </div>
                         </CopyToClipboard>
 
@@ -470,7 +454,6 @@ function Paginate(props) {
                           style={{ cursor: "zoom-in" }}
                           src={image}
                           alt=""
-                          key={index}
                           className="image"
                           onClick={() => {
                             setZoomImgIndex(index);
@@ -489,7 +472,7 @@ function Paginate(props) {
           {/* Zoomed image view */}
 
           {isZoomed ? (
-            <div>
+            <div> 
               <div className="zoomed_image_navigation">
                 <button
                   style={{
@@ -498,7 +481,7 @@ function Paginate(props) {
                   disabled={!nextImg}
                   onClick={handleImageSwitch}
                 >
-                  <AngleLeftIcon color="white" width={20} height="auto" />
+                  <AngleLeftIcon color="white" width={20} height={"auto"} />
                 </button>
 
                 <p>{nextImg ? 2 : 1} / 2</p>
@@ -510,7 +493,7 @@ function Paginate(props) {
                   disabled={nextImg}
                   onClick={handleImageSwitch}
                 >
-                  <AngleRightIcon color="white" width={20} height="auto" />
+                  <AngleRightIcon color="white" width={20} height={"auto"} />
                 </button>
               </div>
 

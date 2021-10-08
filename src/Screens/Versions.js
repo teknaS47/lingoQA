@@ -3,7 +3,7 @@ import axios from "axios";
 import BASE_URL from "../API/BASE_URL";
 import Paginate from "../Components/Paginate";
 import Breadcrumbs from "../Components/Breadcrumbs";
-import { useHistory } from "react-router";
+import { useHistory, Redirect } from "react-router-dom";
 import constant from "../Constants/EnglishScreens.json";
 import SimpleForm from "../Components/SimpleForm";
 import PaginateForm from "../Components/PaginateForm";
@@ -117,6 +117,9 @@ export default function Versions(props) {
       },
     });
     
+    const bugzillaProductNames = await axios(`${BASE_URL}/bugzilla_product_names`)
+    console.log(bugzillaProductNames)
+
     try {
       const screenshotsData = await axios(`${BASE_URL}/screenshots`, {
         params: {
@@ -150,6 +153,14 @@ export default function Versions(props) {
       return err;
     }
   };
+
+  const tokenString = localStorage.getItem("token");
+
+  if(!tokenString)
+  {
+    return (<Redirect to="/login"/>)
+  }
+
   return (
     <>
       <PageSection variant={PageSectionVariants.light}>

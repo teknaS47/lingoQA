@@ -3,16 +3,16 @@
 
 import React, { useState, useCallback, useEffect } from "react";
 import {
-  LoginFooterItem,
+  // LoginFooterItem,
   LoginForm,
-  LoginMainFooterBandItem,
-  LoginMainFooterLinksItem,
+  // LoginMainFooterBandItem,
+  // LoginMainFooterLinksItem,
   LoginPage,
-  BackgroundImageSrc,
-  ListItem,
+  // BackgroundImageSrc,
+  // ListItem,
 } from "@patternfly/react-core";
 import { Redirect, useHistory } from "react-router-dom";
-import { ExclamationCircleIcon } from "@patternfly/react-icons";
+// import { ExclamationCircleIcon } from "@patternfly/react-icons";
 
 function Login() {
   // showHelperText: false,
@@ -54,12 +54,12 @@ function Login() {
   //   this.setState({ isRememberMeChecked: !this.state.isRememberMeChecked });
   // };
 
-  const loginComplete = () => {
-    if (isValidUsername && isValidPassword) {
-      console.log("aaaaaaaa");
-      window.open("/", "_self");
-    }
-  };
+  // const loginComplete = () => {
+  //   if (isValidUsername && isValidPassword) {
+  //     console.log("aaaaaaaa");
+  //     window.open("/", "_self");
+  //   }
+  // };
 
   const onLoginButtonClick = (event) => {
     event.preventDefault();

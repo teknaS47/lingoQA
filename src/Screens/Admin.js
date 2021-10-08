@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import React, { useState, useCallback, useEffect } from "react";
 import BASE_URL from "../API/BASE_URL";
 import { useHistory, Redirect } from "react-router-dom";
@@ -47,6 +48,11 @@ function Admin() {
   const [adminAlert, setAdminAlert] = useState(false);
   const [adminAlertTitle, setAdminAlertTitle] = useState("");
   const [adminAlertVariant, setAdminAlertVariant] = useState("");
+
+  const [bugzillaNames, setBugzillaNames] = useState([]);
+  const [selectedBugzillaName, setSelectedBugzillaName] = useState(0);
+  const [newBugzillaName, setNewBugzillaName] = useState("");
+  const [validatedBugzillaName, setValidatedBugzillaName] = useState("default");
 
   let data = new FormData();
 
@@ -128,6 +134,13 @@ function Admin() {
     } else setSelectedVersion(e);
   }
 
+  function handleDropdownChangeBugzillaName(e) {
+    setValidatedBugzillaName("default");
+    if (e === "+ Add new") {
+      setSelectedBugzillaName("+ Add new");
+    } else setSelectedBugzillaName(e);
+  }
+
   const handleDropdownChangeLocale = useCallback((e) => {
     setValidatedLocale("default");
     setSelectedLocale(e);
@@ -143,6 +156,11 @@ function Admin() {
     console.log(e);
     setValidatedVersion("default");
     setNewVersion(e);
+  };
+
+  const handleNewBugzillaNameChange = (e) => {
+    setValidatedBugzillaName("default");
+    setNewBugzillaName(e);
   };
 
   const handleNewLocaleLanguageChange = (e) => {
@@ -167,8 +185,16 @@ function Admin() {
     setProducts(ProductsData.data);
   };
 
+  const fetchBugzillaNamesData = async () => {
+    const BugziallaNamesData = await axios(
+      `${BASE_URL}/bugzilla_product_names`
+    );
+    setBugzillaNames(BugziallaNamesData.data);
+  };
+
   useEffect(() => {
     fetchProductsData();
+    fetchBugzillaNamesData();
     getLocale();
   }, []);
 
@@ -216,7 +242,7 @@ function Admin() {
     }
   };
 
-  const getScreenshots = async () => {
+  const getScreenshots = useCallback(async () => {
     if (
       selectedVersion !== 0 &&
       selectedLocale !== 0 &&
@@ -225,12 +251,6 @@ function Admin() {
     )
       try {
         const screenshotsData = await axios(`${BASE_URL}/screenshots`, {
-          params: {
-            product_version_id: selectedVersion,
-            locale_id: selectedLocale,
-          },
-        });
-        const screenshotsENData = await axios(`${BASE_URL}/screenshots`, {
           params: {
             product_version_id: selectedVersion,
             locale_id: selectedLocale,
@@ -254,13 +274,13 @@ function Admin() {
       } catch (err) {
         return err;
       }
-  };
+  }, [selectedLocale, selectedVersion]);
 
   useEffect(() => {
     getScreenshots();
     getLocale();
     setUploadDisabled(false);
-  }, [selectedLocale, selectedVersion]);
+  }, [getScreenshots, selectedLocale, selectedVersion]);
 
   useEffect(() => {
     if (screenshotsOther.length !== 0) {
@@ -281,9 +301,8 @@ function Admin() {
     setIsLoading(true);
 
     let productId = 0;
-    let versionId = 0;
 
-    const AddProductsData = await axios
+    await axios
       .post(`${BASE_URL}/products`, {
         name: newProduct,
       })
@@ -300,78 +319,88 @@ function Admin() {
           console.log("product.id", product.id);
         }
       })
-
-      .then(async () => {
-        const AddVersionsData = await axios.post(
-          `${BASE_URL}/products/${productId}/product_versions`,
-          {
-            name: newVersion,
-            product_id: productId,
-          }
-        );
-      })
-      .then(async () => {
-        const VersionsData = await axios.get(
-          `${BASE_URL}/products/${productId}/product_versions`
-        );
-        setVersions(VersionsData.data);
-        const version = VersionsData.data.find(
-          (version) => version.name === newVersion
-        );
-        if (version) {
-          versionId = version.id;
-          console.log(
-            "VersionsData",
-            VersionsData,
-            "VersionsData.data",
-            VersionsData.data
-          );
-        }
-      })
-
       .catch(function (error) {
         console.log(error);
       });
-    return versionId;
-  }, [newProduct, newVersion]);
+    return productId;
+  }, [newProduct]);
 
-  const addVersion = useCallback(async () => {
-
+  const addBugzillaName = useCallback(async () => {
     setIsLoading(true);
 
-    const product_id = selectedProduct;
-    let versionId = 0;
+    let bugzillaNameId = 0;
 
-    const VersionsData = await axios
-      .post(`${BASE_URL}/products/${product_id}/product_versions`, {
-        name: newVersion,
-        product_id: product_id,
+    const AddBugzillaNamesData = await axios
+      .post(`${BASE_URL}/bugzilla_product_names`, {
+        name: newBugzillaName,
       })
       .then(async () => {
-        const VersionsData = await axios.get(
-          `${BASE_URL}/products/${product_id}/product_versions`
+        const BugzillaNamesData = await axios.get(
+          `${BASE_URL}/bugzilla_product_names`
         );
-        setVersions(VersionsData.data);
-        const version = VersionsData.data.find(
-          (version) => version.name === newVersion
+        setBugzillaNames(BugzillaNamesData.data);
+        const bugzillaName = BugzillaNamesData.data.find(
+          (bugzillaName) => bugzillaName.name === newBugzillaName
         );
-        if (version) {
-          versionId = version.id;
+        if (bugzillaName) {
+          bugzillaNameId = bugzillaName.id;
           console.log(
-            "VersionsData",
-            VersionsData,
-            "VersionsData.data",
-            VersionsData.data
+            "BugzillaNamesData",
+            BugzillaNamesData,
+            "BugzillaNamesData.data",
+            BugzillaNamesData.data
           );
-          console.log("versionId", versionId);
+          console.log("bugzillaNameId", bugzillaNameId);
         }
       })
       .catch(function (error) {
         console.log(error);
       });
-    console.log(VersionsData);
-    return versionId;
-  }, [newVersion, selectedProduct]);
+    console.log(AddBugzillaNamesData);
+    return bugzillaNameId;
+  }, [newBugzillaName]);
+
+  const addVersion = useCallback(
+    async (product_id, bugzilla_name_id) => {
+      setIsLoading(true);
+
+      // const product_id = product_id_;
+
+      let versionId = 0;
+
+      const AddVersionsData = await axios
+        .post(`${BASE_URL}/products/${product_id}/product_versions`, {
+          name: newVersion,
+          product_id: product_id,
+          bugzilla_product_names_id: bugzilla_name_id,
+        })
+        .then(async () => {
+          const VersionsData = await axios.get(
+            `${BASE_URL}/products/${product_id}/product_versions`
+          );
+          setVersions(VersionsData.data);
+          const version = VersionsData.data.find(
+            (version) => version.name === newVersion
+          );
+          if (version) {
+            versionId = version.id;
+            console.log(
+              "VersionsData",
+              VersionsData,
+              "VersionsData.data",
+              VersionsData.data
+            );
+            console.log("versionId", versionId);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      console.log(AddVersionsData);
+      return versionId;
+    },
+    [newVersion]
+  );
 
   const getLocale = async () => {
     const LocalesData = await axios(`${BASE_URL}/locales`).catch((e) => {
@@ -385,7 +414,7 @@ function Admin() {
 
     let localeId = 0;
 
-    const AddLocalesData = await axios
+    await axios
       .post(`${BASE_URL}/locales`, {
         language: newLocaleLanguage,
         code: newLocaleCode,
@@ -418,19 +447,25 @@ function Admin() {
   }, [newLocaleCode, newLocaleLanguage]);
 
   const addScreenshots = async () => {
-    console.log(selectedProduct);
+    console.log(selectedProduct, selectedVersion, selectedLocale);
     if (
-      (selectedProduct == 0 || selectedProduct === "+ Add new") &&
+      (selectedProduct == "0" || selectedProduct === "+ Add new") &&
       newProduct === ""
     )
       setValidatedProduct("error");
     else if (
-      (selectedVersion == 0 || selectedVersion === "+ Add new") &&
+      (selectedVersion == "0" || selectedVersion === "+ Add new") &&
       newVersion === ""
     )
       setValidatedVersion("error");
     else if (
-      (selectedLocale == 0 || selectedLocale === "+ Add new") &&
+      selectedVersion === "+ Add new" &&
+      (selectedBugzillaName == "0" || selectedBugzillaName === "+ Add new") &&
+      newBugzillaName === ""
+    )
+      setValidatedBugzillaName("error");
+    else if (
+      (selectedLocale == "0" || selectedLocale === "+ Add new") &&
       (newLocaleLanguage === "" || newLocaleCode === "")
     )
       setValidatedLocale("error");
@@ -447,15 +482,22 @@ function Admin() {
       setUploadDisabled(true);
       setIsLoading(true);
 
+      let product_id = selectedProduct;
       let product_version_id = selectedVersion;
       let locale_id = selectedLocale;
+      let bugzilla_name_id = selectedBugzillaName;
 
       if (selectedProduct === "+ Add new") {
-        product_version_id = await addProduct();
-      } 
-      
-      else if (selectedVersion === "+ Add new") {
-        product_version_id = await addVersion();
+        product_id = await addProduct();
+        if (selectedBugzillaName === "+ Add new") {
+          bugzilla_name_id = await addBugzillaName();
+        }
+        product_version_id = await addVersion(product_id, bugzilla_name_id);
+      } else if (selectedVersion === "+ Add new") {
+        if (selectedBugzillaName === "+ Add new") {
+          bugzilla_name_id = await addBugzillaName();
+        }
+        product_version_id = await addVersion(product_id, bugzilla_name_id);
       }
 
       if (newLocaleLanguage !== "" && newLocaleCode !== "") {
@@ -466,14 +508,20 @@ function Admin() {
 
       setUploadDisabled(false);
       clearSelectedFiles();
+
+      setSelectedProduct(0);
+      setSelectedBugzillaName(0);
+      setSelectedVersion(0);
+      setSelectedLocale(0);
+      setScreenshotsName("");
+
+      setLocales([]);
+      setVersions([]);
+
+      setIsLoading(false);
       history.push({
         pathname: "/admin",
       });
-      setSelectedProduct(0);
-      setVersions([]);
-      setLocales([]);
-      setScreenshotsName("");
-      setIsLoading(false);
     }
   };
 
@@ -490,6 +538,14 @@ function Admin() {
     const ScreenshotsData = await axios
       .post(`${BASE_URL}/screenshots`, data, {
         contentType: `multipart/form-data`,
+      })
+      .then(() => {
+        setAdminAlertTitle("Screenshots uploaded successfully!");
+        setAdminAlertVariant("success");
+        setAdminAlert(true);
+        setTimeout(() => {
+          setAdminAlert(false);
+        }, 5000);
       })
       .catch(function (error) {
         console.log(error);
@@ -511,9 +567,13 @@ function Admin() {
 
   return (
     <Page sidebar={<PageSidebar nav={"Navigation"} isNavOpen={false} />}>
-      {adminAlert ? (
-        <Alert variant={adminAlertVariant} title={adminAlertTitle} />
-      ) : null}
+      
+      <div style={{ position: "fixed", zIndex: 10000, width: "97%", top: "5%", left:"1.5%" }}>
+        {adminAlert ? (
+          <Alert variant={adminAlertVariant} title={adminAlertTitle} />
+        ) : null}
+      </div>
+
       <PageSection>
         {isLoading ? (
           <Bullseye>
@@ -532,22 +592,12 @@ function Admin() {
             {selectedProduct === "+ Add new" ? (
               <FormGroup>
                 <TextInput
+                  id="product"
                   isRequired
                   autoFocus
                   validated={validatedProduct}
                   onChange={handleNewProductChange}
                 ></TextInput>
-                {/* <ActionGroup>
-                  <Button onClick={addProduct}>Add Product</Button>
-                  <Button
-                    variant={"secondary"}
-                    onClick={() => {
-                      setSelectedProduct(0);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </ActionGroup> */}
               </FormGroup>
             ) : (
               <FormSelect
@@ -583,12 +633,12 @@ function Admin() {
             selectedVersion === "+ Add new" ? (
               <FormGroup>
                 <TextInput
+                  id="version"
                   isRequired
                   validated={validatedVersion}
                   onChange={handleNewVersionChange}
                 ></TextInput>
                 <ActionGroup>
-                  {/* <Button onClick={addVersion}>Add Version</Button> */}
                   {selectedProduct === "+ Add new" ? (
                     <Button
                       variant={"secondary"}
@@ -629,11 +679,62 @@ function Admin() {
                     label={versions.name}
                   />
                 ))}
-                {selectedProduct === 0 ? null : <option>+ Add new</option>}
+                {selectedProduct == 0 ? null : <option>+ Add new</option>}
               </FormSelect>
             )}
           </FormGroup>
-
+          {selectedVersion === "+ Add new" ||
+          selectedProduct === "+ Add new" ? (
+            <FormGroup
+              label="Select Bugzilla Name"
+              isRequired
+              fieldId="bugzilla_name"
+              helperTextInvalid="Select a Bugzilla name"
+              validated={validatedVersion}
+            >
+              {selectedBugzillaName === "+ Add new" ? (
+                <FormGroup>
+                  <TextInput
+                    id="bugzilla_name"
+                    isRequired
+                    autoFocus
+                    validated={validatedBugzillaName}
+                    onChange={handleNewBugzillaNameChange}
+                  ></TextInput>
+                  <ActionGroup>
+                    <Button
+                      variant={"secondary"}
+                      onClick={() => {
+                        setSelectedBugzillaName(0);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </ActionGroup>
+                </FormGroup>
+              ) : (
+                <FormSelect
+                  id="BugzillaName"
+                  isRequired
+                  value={selectedBugzillaName}
+                  validated={validatedBugzillaName}
+                  onChange={(e) => {
+                    handleDropdownChangeBugzillaName(e);
+                  }}
+                >
+                  <option value={0}> Select </option>
+                  {bugzillaNames.map((bugzillaNames, index) => (
+                    <FormSelectOption
+                      key={index}
+                      value={bugzillaNames.id}
+                      label={bugzillaNames.name}
+                    />
+                  ))}
+                  {selectedProduct == 0 ? null : <option>+ Add new</option>}
+                </FormSelect>
+              )}
+            </FormGroup>
+          ) : null}
           <FormGroup
             label="Select Locale"
             isRequired
@@ -644,19 +745,20 @@ function Admin() {
             {selectedLocale === "+ Add new" ? (
               <FormGroup>
                 <TextInput
+                  id="locale_language"
                   isRequired
                   validated={validatedLocale}
                   placeholder="Enter Language"
                   onChange={handleNewLocaleLanguageChange}
                 ></TextInput>
                 <TextInput
+                  id="locale_code"
                   isRequired
                   validated={validatedLocale}
                   placeholder="Enter Code"
                   onChange={handleNewLocaleCodeChange}
                 ></TextInput>
                 <ActionGroup>
-                  {/* <Button onClick={addLocale}>Add Locale</Button> */}
                   <Button
                     variant={"secondary"}
                     onClick={() => {
