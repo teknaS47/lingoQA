@@ -16,8 +16,8 @@ module Api
       def create
         product = Product.new(product_name_params)
         product.save!
-        rescue ActiveRecord::RecordInvalid => invalid
-          render json: { errors: invalid.record.errors }
+      rescue ActiveRecord::RecordInvalid => invalid
+        render json: { errors: invalid.record.errors }
       end
 
       def product_name_params

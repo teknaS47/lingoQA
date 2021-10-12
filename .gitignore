@@ -5,6 +5,7 @@
 #   git config --global core.excludesfile '~/.gitignore_global'
 *~
 /.bundle
+/.history
 /db/*.sqlite3
 /db/*.sqlite3-journal
 /log/*
@@ -36,4 +37,4 @@ app/jobs/*
 app/mailers/*
 app/channels/*
 /config/credentials/*.key
-.history
+Gemfile.lock

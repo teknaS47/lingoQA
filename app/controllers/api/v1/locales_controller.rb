@@ -16,14 +16,13 @@ module Api
       def create
         locale = Locale.new(locale_name_params)
         locale.save!
-        rescue ActiveRecord::RecordInvalid => invalid
-          render json: { errors: invalid.record.errors }
+      rescue ActiveRecord::RecordInvalid => invalid
+        render json: { errors: invalid.record.errors }
       end
 
       def locale_name_params
         params.permit(:language, :code)
       end
-      
     end
   end
 end
