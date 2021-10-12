@@ -54,6 +54,8 @@ function Admin() {
   const [newBugzillaName, setNewBugzillaName] = useState("");
   const [validatedBugzillaName, setValidatedBugzillaName] = useState("default");
 
+  const newOption = "+ Add new"
+
   let data = new FormData();
 
   const { acceptedFiles, getRootProps, getInputProps, open } = useDropzone({
@@ -119,9 +121,9 @@ function Admin() {
     setSelectedProduct(e);
     console.log("handleDropdownChangeProduct", e);
     if (e === 0) setSelectedProduct(0);
-    else if (e === "+ Add new") {
-      setSelectedProduct("+ Add new");
-      setSelectedProduct("+ Add new");
+    else if (e === newOption) {
+      setSelectedProduct(newOption);
+      setSelectedProduct(newOption);
     } else {
       fetchProductsVersionData(e);
     }
@@ -129,15 +131,15 @@ function Admin() {
 
   function handleDropdownChangeVersion(e) {
     setValidatedVersion("default");
-    if (e === "+ Add new") {
-      setSelectedVersion("+ Add new");
+    if (e === newOption) {
+      setSelectedVersion(newOption);
     } else setSelectedVersion(e);
   }
 
   function handleDropdownChangeBugzillaName(e) {
     setValidatedBugzillaName("default");
-    if (e === "+ Add new") {
-      setSelectedBugzillaName("+ Add new");
+    if (e === newOption) {
+      setSelectedBugzillaName(newOption);
     } else setSelectedBugzillaName(e);
   }
 
@@ -199,10 +201,10 @@ function Admin() {
   }, []);
 
   const fetchProductsVersionData = async (e) => {
-    if (e === "+ Add new" || e === 0) {
+    if (e === newOption || e === 0) {
       console.log(e);
-      e === "+ Add new"
-        ? setSelectedVersion("+ Add new")
+      e === newOption
+        ? setSelectedVersion(newOption)
         : setSelectedVersion(0);
       setVersions([]);
       setLocales([]);
@@ -246,8 +248,8 @@ function Admin() {
     if (
       selectedVersion !== 0 &&
       selectedLocale !== 0 &&
-      selectedVersion !== "+ Add new" &&
-      selectedLocale !== "+ Add new"
+      selectedVersion !== newOption &&
+      selectedLocale !== newOption
     )
       try {
         const screenshotsData = await axios(`${BASE_URL}/screenshots`, {
@@ -449,23 +451,23 @@ function Admin() {
   const addScreenshots = async () => {
     console.log(selectedProduct, selectedVersion, selectedLocale);
     if (
-      (selectedProduct == "0" || selectedProduct === "+ Add new") &&
+      (selectedProduct == "0" || selectedProduct === newOption) &&
       newProduct === ""
     )
       setValidatedProduct("error");
     else if (
-      (selectedVersion == "0" || selectedVersion === "+ Add new") &&
+      (selectedVersion == "0" || selectedVersion === newOption) &&
       newVersion === ""
     )
       setValidatedVersion("error");
     else if (
-      selectedVersion === "+ Add new" &&
-      (selectedBugzillaName == "0" || selectedBugzillaName === "+ Add new") &&
+      selectedVersion === newOption &&
+      (selectedBugzillaName == "0" || selectedBugzillaName === newOption) &&
       newBugzillaName === ""
     )
       setValidatedBugzillaName("error");
     else if (
-      (selectedLocale == "0" || selectedLocale === "+ Add new") &&
+      (selectedLocale == "0" || selectedLocale === newOption) &&
       (newLocaleLanguage === "" || newLocaleCode === "")
     )
       setValidatedLocale("error");
@@ -487,14 +489,14 @@ function Admin() {
       let locale_id = selectedLocale;
       let bugzilla_name_id = selectedBugzillaName;
 
-      if (selectedProduct === "+ Add new") {
+      if (selectedProduct === newOption) {
         product_id = await addProduct();
-        if (selectedBugzillaName === "+ Add new") {
+        if (selectedBugzillaName === newOption) {
           bugzilla_name_id = await addBugzillaName();
         }
         product_version_id = await addVersion(product_id, bugzilla_name_id);
-      } else if (selectedVersion === "+ Add new") {
-        if (selectedBugzillaName === "+ Add new") {
+      } else if (selectedVersion === newOption) {
+        if (selectedBugzillaName === newOption) {
           bugzilla_name_id = await addBugzillaName();
         }
         product_version_id = await addVersion(product_id, bugzilla_name_id);
@@ -540,7 +542,7 @@ function Admin() {
         contentType: `multipart/form-data`,
       })
       .then(() => {
-        setAdminAlertTitle("Screenshots uploaded successfully!");
+        setAdminAlertTitle("Screenshots uploaded!");
         setAdminAlertVariant("success");
         setAdminAlert(true);
         setTimeout(() => {
@@ -549,6 +551,12 @@ function Admin() {
       })
       .catch(function (error) {
         console.log(error);
+        setAdminAlertTitle("Couldn't upload screenshots");
+        setAdminAlertVariant("danger");
+        setAdminAlert(true);
+        setTimeout(() => {
+          setAdminAlert(false);
+        }, 5000);
       });
     console.log("ScreenshotsData ", ScreenshotsData);
 
@@ -589,7 +597,7 @@ function Admin() {
             helperTextInvalid="Select a product"
             validated={validatedProduct}
           >
-            {selectedProduct === "+ Add new" ? (
+            {selectedProduct === newOption ? (
               <FormGroup>
                 <TextInput
                   id="product"
@@ -629,8 +637,8 @@ function Admin() {
             helperTextInvalid="Select a version"
             validated={validatedVersion}
           >
-            {selectedProduct === "+ Add new" ||
-            selectedVersion === "+ Add new" ? (
+            {selectedProduct === newOption ||
+            selectedVersion === newOption ? (
               <FormGroup>
                 <TextInput
                   id="version"
@@ -639,7 +647,7 @@ function Admin() {
                   onChange={handleNewVersionChange}
                 ></TextInput>
                 <ActionGroup>
-                  {selectedProduct === "+ Add new" ? (
+                  {selectedProduct === newOption ? (
                     <Button
                       variant={"secondary"}
                       onClick={() => {
@@ -683,8 +691,8 @@ function Admin() {
               </FormSelect>
             )}
           </FormGroup>
-          {selectedVersion === "+ Add new" ||
-          selectedProduct === "+ Add new" ? (
+          {selectedVersion === newOption ||
+          selectedProduct === newOption ? (
             <FormGroup
               label="Select Bugzilla Name"
               isRequired
@@ -692,7 +700,7 @@ function Admin() {
               helperTextInvalid="Select a Bugzilla name"
               validated={validatedVersion}
             >
-              {selectedBugzillaName === "+ Add new" ? (
+              {selectedBugzillaName === newOption ? (
                 <FormGroup>
                   <TextInput
                     id="bugzilla_name"
@@ -742,7 +750,7 @@ function Admin() {
             helperTextInvalid="Select a locale"
             validated={validatedLocale}
           >
-            {selectedLocale === "+ Add new" ? (
+            {selectedLocale === newOption ? (
               <FormGroup>
                 <TextInput
                   id="locale_language"
