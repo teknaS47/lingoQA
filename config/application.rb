@@ -41,7 +41,5 @@ module Lingoqa
         resource "*", :methods => [:get, :post]
       end
     end
-
-    config.active_storage.service_urls_expire_in = 1.week # Defaut: 5.minutes
   end
 end
