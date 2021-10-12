@@ -19,6 +19,7 @@ import {
   Alert,
   Bullseye,
   Spinner,
+  Backdrop,
 } from "@patternfly/react-core";
 import { useDropzone } from "react-dropzone";
 
@@ -54,7 +55,7 @@ function Admin() {
   const [newBugzillaName, setNewBugzillaName] = useState("");
   const [validatedBugzillaName, setValidatedBugzillaName] = useState("default");
 
-  const newOption = "+ Add new"
+  const newOption = "+ Add new";
 
   let data = new FormData();
 
@@ -203,9 +204,7 @@ function Admin() {
   const fetchProductsVersionData = async (e) => {
     if (e === newOption || e === 0) {
       console.log(e);
-      e === newOption
-        ? setSelectedVersion(newOption)
-        : setSelectedVersion(0);
+      e === newOption ? setSelectedVersion(newOption) : setSelectedVersion(0);
       setVersions([]);
       setLocales([]);
     } else if (e !== 0) {
@@ -575,20 +574,40 @@ function Admin() {
 
   return (
     <Page sidebar={<PageSidebar nav={"Navigation"} isNavOpen={false} />}>
-      
-      <div style={{ position: "fixed", zIndex: 10000, width: "97%", top: "5%", left:"1.5%" }}>
-        {adminAlert ? (
+      {adminAlert ? (
+        <div
+          style={{
+            position: "fixed",
+            zIndex: 10000,
+            width: "97%",
+            top: "5%",
+            left: "1.5%",
+          }}
+        >
           <Alert variant={adminAlertVariant} title={adminAlertTitle} />
-        ) : null}
-      </div>
+        </div>
+      ) : null}
 
-      <PageSection>
-        {isLoading ? (
+      {isLoading ? (
+        <div
+          style={{
+            position: "fixed",
+            zIndex: 10000,
+            top: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "white",
+            opacity: "0.5",
+            backdropFilter: "blur(2px)",
+          }}
+        >
           <Bullseye>
             <Spinner></Spinner>
           </Bullseye>
-        ) : null}
+        </div>
+      ) : null}
 
+      <PageSection>
         <Form>
           <FormGroup
             label="Select Product"
@@ -637,8 +656,7 @@ function Admin() {
             helperTextInvalid="Select a version"
             validated={validatedVersion}
           >
-            {selectedProduct === newOption ||
-            selectedVersion === newOption ? (
+            {selectedProduct === newOption || selectedVersion === newOption ? (
               <FormGroup>
                 <TextInput
                   id="version"
@@ -691,8 +709,7 @@ function Admin() {
               </FormSelect>
             )}
           </FormGroup>
-          {selectedVersion === newOption ||
-          selectedProduct === newOption ? (
+          {selectedVersion === newOption || selectedProduct === newOption ? (
             <FormGroup
               label="Select Bugzilla Name"
               isRequired
@@ -809,6 +826,7 @@ function Admin() {
               id="Screenshot name"
               placeholder="Screenshot name (eg. Rhel8.4_JP, Rhel8.4_zh_cn)"
               onChange={handleScreenshotNameChange}
+              value={screenshotsName}
               validated={ValidatedScreenshotsName}
             ></TextInput>
           </FormGroup>
@@ -818,7 +836,6 @@ function Admin() {
               <input {...getInputProps()} />
               <FileUploadField
                 onBrowseButtonClick={open}
-                isLoading={isLoading}
                 isClearButtonDisabled={false}
                 onClearButtonClick={() => clearSelectedFiles()}
                 validated={validatedFileUploadField}
