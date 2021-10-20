@@ -19,7 +19,6 @@ import {
   Alert,
   Bullseye,
   Spinner,
-  Backdrop,
 } from "@patternfly/react-core";
 import { useDropzone } from "react-dropzone";
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import BASE_URL from "../API/BASE_URL";
 import Paginate from "../Components/Paginate";
@@ -7,7 +7,12 @@ import { useHistory, Redirect } from "react-router-dom";
 import constant from "../Constants/EnglishScreens.json";
 import SimpleForm from "../Components/SimpleForm";
 import PaginateForm from "../Components/PaginateForm";
-import { PageSection, PageSectionVariants } from "@patternfly/react-core";
+import {
+  PageSection,
+  PageSectionVariants,
+  Bullseye,
+  Spinner,
+} from "@patternfly/react-core";
 
 export default function Versions(props) {
   const [elementsRight] = useState([]);
@@ -25,14 +30,19 @@ export default function Versions(props) {
   const [screenshotsEN, setScreenshotsEN] = useState([]);
   const [itemCount, setItemCount] = useState();
   const [previousProductId] = useState(props.match.params.productid);
-  const [bugzillaProductName,setBugzillaProductName] = useState("")
+  const [bugzillaProductName, setBugzillaProductName] = useState("");
   // const [previousProductsVersion,setPreviousProductsVersion] = useState("");
   // const [previousLocales,setPreviousLocales] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+
+  const [filteredLocales, setFilteredLocales] = useState([]);
 
   let history = useHistory();
 
   function handleDropdownChangeVersion(e) {
     setSelectProductsVersion(e);
+    fetchfilteredVersionData(e);
   }
 
   function handleDropdownChangeLocale(e) {
@@ -48,7 +58,7 @@ export default function Versions(props) {
   // }, [])
 
   //To get Versions and Locales of selected Product
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchProductsVersionData = async () => {
       const productsVersionData = await axios(
         `${BASE_URL}/products/${previousProductId}/product_versions`
@@ -78,7 +88,6 @@ export default function Versions(props) {
         });
       }
 
-
       // if (previousProductsVersion !== "" && previousLocales !== "") {
       //   const screenshotsData = await axios(`${BASE_URL}/screenshots`, {
       //     params: {
@@ -101,24 +110,54 @@ export default function Versions(props) {
       //     setItemCount(screenshotsENData.data[0].images.length);
       //   }
       // }
-
-
     };
     fetchProductsVersionData();
   }, [previousProductId, history, selectProductsVersion, selectLocales]);
+
+  const fetchfilteredVersionData = async (e) => {
+    setIsLoading(true)
+    let localeArr = [];
+    for (var x = 0; x < locales.length; x++) {
+      let lid = locales[x].id;
+      try {
+        const screenshotsData = await axios(`${BASE_URL}/screenshots`, {
+          params: {
+            product_version_id: e,
+            locale_id: lid,
+          },
+        });
+        // .then( () => {
+        if (screenshotsData.status === 200) {
+          console.log("screenshotsData: ", screenshotsData);
+          localeArr.push(locales[lid - 1]);
+          // setFilteredLocales([...filteredLocales, locales[lid]]);
+        }
+        // })
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    setFilteredLocales(localeArr);
+    setIsLoading(false)
+  };
 
   // To get selected Version and Locale to get screenshots
   const onFormSubmit = async (event) => {
     event.preventDefault();
 
-    const bugzillaProductName = await axios(`${BASE_URL}/bugzilla_product_names`, {
-      params: {
-        id: selectProductsVersion,
-      },
-    });
-    
-    const bugzillaProductNames = await axios(`${BASE_URL}/bugzilla_product_names`)
-    console.log(bugzillaProductNames)
+    const bugzillaProductName = await axios(
+      `${BASE_URL}/bugzilla_product_names`,
+      {
+        params: {
+          id: selectProductsVersion,
+        },
+      }
+    );
+
+    const bugzillaProductNames = await axios(
+      `${BASE_URL}/bugzilla_product_names`
+    );
+    console.log(bugzillaProductNames);
 
     try {
       const screenshotsData = await axios(`${BASE_URL}/screenshots`, {
@@ -134,17 +173,15 @@ export default function Versions(props) {
         },
       });
 
-
       // setPreviousProductsVersion(selectProductsVersion);
       // setPreviousLocales(selectLocales);
 
       // console.log(selectLocales,selectProductsVersion,previousLocales.previousProductsVersion)
 
-      
       if (!screenshotsENData.data.length) {
         alert("The selected Version have no English Screenshots");
       } else {
-        setBugzillaProductName(bugzillaProductName.data)
+        setBugzillaProductName(bugzillaProductName.data);
         setScreenshotsOther(screenshotsData.data);
         setScreenshotsEN(screenshotsENData.data);
         setItemCount(screenshotsENData.data[0].images.length);
@@ -156,16 +193,34 @@ export default function Versions(props) {
 
   const tokenString = localStorage.getItem("token");
 
-  if(!tokenString)
-  {
-    return (<Redirect to="/login"/>)
+  if (!tokenString) {
+    return <Redirect to="/login" />;
   }
 
   return (
     <>
+      {isLoading ? (
+        <div
+          style={{
+            position: "fixed",
+            zIndex: 10000,
+            top: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "white",
+            opacity: "0.5",
+            backdropFilter: "blur(2px)",
+          }}
+        >
+          <Bullseye>
+            <Spinner></Spinner>
+          </Bullseye>
+        </div>
+      ) : null}
+
       <PageSection variant={PageSectionVariants.light}>
         <Breadcrumbs />
-        {locales &&
+        {filteredLocales &&
           productsVersion &&
           ((screenshotsOther && screenshotsOther.length !== 0) ||
             (screenshotsEN && screenshotsEN.length !== 0)) && (
@@ -173,7 +228,7 @@ export default function Versions(props) {
               selectProductsVersion={selectProductsVersion}
               selectLocales={selectLocales}
               productsVersion={productsVersion}
-              locales={locales}
+              locales={filteredLocales}
               handleVersionChange={(e, event) =>
                 handleDropdownChangeVersion(e, event)
               }
@@ -201,11 +256,11 @@ export default function Versions(props) {
             perPage={perPage}
           />
         ) : (
-          locales &&
+          filteredLocales &&
           productsVersion && (
             <SimpleForm
               productsVersion={productsVersion}
-              locales={locales}
+              locales={filteredLocales}
               handleVersionChange={(e, event) =>
                 handleDropdownChangeVersion(e, event)
               }
