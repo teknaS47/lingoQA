@@ -4,12 +4,16 @@ import {
   Pagination,
   Modal,
   ModalVariant,
+  Bullseye,
+  Spinner,
   Button,
 } from "@patternfly/react-core";
 import SimpleEmptyState from "./SimpleEmptyState";
 import PropTypes from "prop-types";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
+import axios from "axios";
+import BASE_URL from "../API/BASE_URL";
 import {
   AngleRightIcon,
   AngleLeftIcon,
@@ -33,6 +37,12 @@ function Paginate(props) {
   const [imageColumn, setImageColumn] = useState(0);
   const [bugzillaProductName, setBugzillaProductName] = useState("");
   const [copyAlert, setCopyAlert] = useState(false);
+  const [selectProductsVersion, setSelectProductsVersion] = useState("");
+  const [selectLocales, setSelectLocales] = useState("");
+  const [analysedImage, setAnalysedImage] = useState("");
+  const [analyseImageIndex, setAnalyseImageIndex] = useState()
+  const [isLoading, setIsLoading] = useState(false);
+
 
   //Set the page
   const onSetPage = (_event, pageNumber) => {
@@ -73,12 +83,16 @@ function Paginate(props) {
     setScreenshotsOther(props.screenshotsOther);
     setScreenshotsEN(props.screenshotsEN);
     setItemCount(props.itemCount);
+    setSelectProductsVersion(props.selectProductsVersion);
+    setSelectLocales(props.selectLocales);
     setOffset(0);
   }, [
     props.screenshotsEN,
     props.screenshotsOther,
     props.itemCount,
     props.bugzillaProductName,
+    props.selectProductsVersion,
+    props.selectLocales,
   ]);
 
   React.useEffect(() => {
@@ -108,7 +122,25 @@ function Paginate(props) {
     props.screenshotsOther,
   ]);
 
-  const paginateEN = () => (
+  const analyse = async (index) => {
+    setIsLoading(true)
+    
+    const analysedImageResponse = await axios(`${BASE_URL}/screenshots`, {
+      params: {
+        product_version_id: selectProductsVersion,
+        locale_id: selectLocales,
+        indexnumber: index,
+      },
+      headers: { "Content-Type": "image/png" },
+    });
+    setAnalyseImageIndex(index)
+    setAnalysedImage(analysedImageResponse.data);
+  // }
+    
+    setIsLoading(false)
+  };
+
+    const paginateEN = () => (
     <>
       <Pagination
         widgetId="pagination-options-menu-bottom"
@@ -123,13 +155,9 @@ function Paginate(props) {
         onLastClick={onLastClick}
       />
 
-      
       <div style={{ position: "fixed", zIndex: 10000, width: "97%", top: 50 }}>
         {copyAlert ? (
-           <Alert
-           variant="success"
-           title="Image link coppied successfully"
-         />
+          <Alert variant="success" title="Image link coppied successfully" />
         ) : null}
       </div>
 
@@ -147,10 +175,7 @@ function Paginate(props) {
               redirect();
             }}
           >
-            <Button
-              key="confirm"
-              variant="primary"
-            >
+            <Button key="confirm" variant="primary">
               Confirm
             </Button>
           </CopyToClipboard>,
@@ -196,7 +221,7 @@ function Paginate(props) {
       <div className="en_screens mb-4">
         {elementsLeft.map((image, index) => (
           <div key={index}>
-            <div className="container" >
+            <div className="container">
               {/* Report a Bug button */}
 
               <div
@@ -273,6 +298,26 @@ function Paginate(props) {
 
   const paginateOther = () => (
     <>
+    {isLoading ? (
+        <div
+          style={{
+            position: "fixed",
+            zIndex: 10000,
+            left:0,
+            top: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "white",
+            opacity: "0.5",
+            backdropFilter: "blur(2px)",
+          }}
+        >
+          <Bullseye>
+            <Spinner></Spinner>
+          </Bullseye>
+        </div>
+      ) : null}
+
       <Pagination
         widgetId="pagination-options-menu-bottom"
         itemCount={itemCount}
@@ -286,12 +331,22 @@ function Paginate(props) {
         onLastClick={onLastClick}
       />
 
+      {analysedImage ? (
+        <div
+          className="zoomed_image_container"
+          onClick={() => {
+            setAnalysedImage(false);
+          }}
+        >
+          <img src={`data:image/png;base64,${analysedImage}`} alt="" />
+        </div>
+      ) : (
+        ""
+      )}
+
       <div style={{ position: "fixed", zIndex: 10000, width: "97%", top: 50 }}>
         {copyAlert ? (
-           <Alert
-           variant="success"
-           title="Image link coppied successfully"
-         />
+          <Alert variant="success" title="Image link coppied successfully" />
         ) : null}
       </div>
 
@@ -313,10 +368,7 @@ function Paginate(props) {
               redirect();
             }}
           >
-            <Button
-              key="confirm"
-              variant="primary"
-            >
+            <Button key="confirm" variant="primary">
               Confirm
             </Button>
           </CopyToClipboard>,
@@ -372,7 +424,7 @@ function Paginate(props) {
                       {/* Report a Bug button */}
 
                       <div
-                      key={index}
+                        key={index}
                         className="redirect"
                         onClick={() => {
                           setCurrentImageIndex(index);
@@ -425,7 +477,7 @@ function Paginate(props) {
                         {/* Report a Bug button */}
 
                         <div
-                        key={index}
+                          key={index}
                           className="redirect"
                           onClick={() => {
                             setCurrentImageIndex(index);
@@ -434,6 +486,16 @@ function Paginate(props) {
                           }}
                         >
                           <div className="text">Report bug</div>
+                        </div>
+
+                        <div
+                          key={index}
+                          className="analyse"
+                          onClick={() => {
+                            analyse(index);
+                          }}
+                        >
+                          <div className="text">Analyse</div>
                         </div>
 
                         <CopyToClipboard
@@ -472,7 +534,7 @@ function Paginate(props) {
           {/* Zoomed image view */}
 
           {isZoomed ? (
-            <div> 
+            <div>
               <div className="zoomed_image_navigation">
                 <button
                   style={{

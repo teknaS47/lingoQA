@@ -89,9 +89,10 @@
   opacity: 0.75;
 }
 
-.container:hover .redirect, .container:hover .copyLink {
+.container:hover .redirect, .container:hover .analyse, .container:hover .copyLink {
   opacity: 1;
 }
+
 .redirect {
     transition: .5s ease;
     opacity: 0;
@@ -99,7 +100,17 @@
     float:right;
     left: auto;
     text-align: center;
-    background-color: #04AA6D;
+    background-color: #f10404;
+}
+
+.analyse {
+  transition: .5s ease;
+  opacity: 0;
+  width: auto;
+  float:right;
+  left: auto;
+  text-align: center;
+  background-color: #04AA6D;
 }
 
 .copyLink {

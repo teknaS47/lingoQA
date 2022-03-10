@@ -53,6 +53,7 @@ function Admin() {
   const [selectedBugzillaName, setSelectedBugzillaName] = useState(0);
   const [newBugzillaName, setNewBugzillaName] = useState("");
   const [validatedBugzillaName, setValidatedBugzillaName] = useState("default");
+  const [screenshotsId, setScreenshotsId] = useState(0);
 
   const newOption = "+ Add new";
 
@@ -242,6 +243,35 @@ function Admin() {
     }
   };
 
+  const deleteScreenshots = async () => {
+    const deleted = await axios
+      .delete(`${BASE_URL}/screenshots/${screenshotsId}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials" : true,
+          contentType: "application/json"
+           // Authorization: authorizationToken
+        },
+        // params: {
+        //   product_version_id: selectedVersion,
+        //   locale_id: selectedLocale,
+        // },
+      })
+      // axios
+      //   .delete(`${BASE_URL}/screenshots`, {
+      //     params: {
+      //       product_version_id: selectedVersion,
+      //       locale_id: selectedLocale,
+      //     },
+      //   })
+      .then(() => {
+        console.log("Delete Screenshots : ",deleted);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   const getScreenshots = useCallback(async () => {
     if (
       selectedVersion !== 0 &&
@@ -259,6 +289,8 @@ function Admin() {
 
         console.log(" GET SCREENSHOTS ", screenshotsData, " GET SCREENSHOTS ");
 
+        setScreenshotsId(screenshotsData.data[0].id)
+         
         if (!screenshotsData.data.length) {
           setAdminAlertTitle(
             "The selected Version have no English Screenshots"
@@ -287,6 +319,7 @@ function Admin() {
       setAdminAlertTitle(
         "Screenshots for this locale already exists. Please choose another locale."
       );
+      // console.log(screenshotsId)
       setAdminAlertVariant("warning");
       setAdminAlert(true);
       setTimeout(() => {
@@ -855,6 +888,16 @@ function Admin() {
               }}
             >
               Submit
+            </Button>
+          </ActionGroup>
+
+          <ActionGroup>
+            <Button
+              onClick={() => {
+                deleteScreenshots();
+              }}
+            >
+              Delete
             </Button>
           </ActionGroup>
         </Form>

@@ -247,6 +247,8 @@ export default function Versions(props) {
             screenshotsOther={screenshotsOther}
             screenshotsEN={screenshotsEN}
             itemCount={itemCount}
+            selectProductsVersion={selectProductsVersion}
+            selectLocales={selectLocales}
             elements={elements}
             elementsRight={elementsRight}
             elementsLeft={elementsLeft}

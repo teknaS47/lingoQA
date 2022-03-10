@@ -2,6 +2,7 @@
   "name": "frontend-demo",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@patternfly/react-core": "^4.135.0",
     "@patternfly/react-topology": "^4.9.6",
