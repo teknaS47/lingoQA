@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import BASE_URL from "../API/BASE_URL";
 import Paginate from "../Components/Paginate";
@@ -30,24 +30,48 @@ export default function Versions(props) {
   const [screenshotsEN, setScreenshotsEN] = useState([]);
   const [itemCount, setItemCount] = useState();
   const [previousProductId] = useState(props.match.params.productid);
+  const [versionId, setVersionId] = useState(props.match.params.versionId);
+  const [localeId, setLocaleId] = useState(props.match.params.localeId);
+  // const [imageId] = useState(props.match.params.localeId);
+
   const [bugzillaProductName, setBugzillaProductName] = useState("");
   // const [previousProductsVersion,setPreviousProductsVersion] = useState("");
   // const [previousLocales,setPreviousLocales] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
 
   const [filteredLocales, setFilteredLocales] = useState([]);
 
   let history = useHistory();
 
   function handleDropdownChangeVersion(e) {
+    // setVersionId(null);
+    // setLocaleId(null);
+    resetIds();
     setSelectProductsVersion(e);
     fetchfilteredVersionData(e);
   }
 
   function handleDropdownChangeLocale(e) {
+    // setVersionId(null);
+    setLocaleId(e);
+    // window.location.replace("/products/"+previousProductId+"/screenshots/");
     setSelectLocales(e);
+    // resetIds();
   }
+
+  const resetIds = useCallback(() => {
+    setIsLoading(true);
+    setVersionId(null);
+    setLocaleId(null);
+    setIsLoading(false);
+  }, []);
+
+  // const resetIds = ()  =>{
+  //   setIsLoading(true);
+  //   setVersionId(null);
+  //   setLocaleId(null);
+  //   setIsLoading(false);
+  // }
 
   // React.useEffect(() => {
   //   const previousLocalesS = (localStorage.getItem("previousLocalesS") || "")
@@ -88,6 +112,35 @@ export default function Versions(props) {
         });
       }
 
+      if (versionId && localeId) {
+        fetchfilteredVersionData(versionId);
+
+        const screenshotsData = await axios(`${BASE_URL}/screenshots`, {
+          params: {
+            product_version_id: versionId,
+            locale_id: localeId,
+          },
+        });
+        const screenshotsENData = await axios(`${BASE_URL}/screenshots`, {
+          params: {
+            product_version_id: versionId,
+            locale_id: constant.englishLocaleId,
+          },
+        });
+
+        if (!screenshotsENData.data.length) {
+          alert("The selected Version have no English Screenshots");
+        } else {
+          setSelectLocales(localeId);
+          // setSelectProductsVersion(versionId);
+          // setBugzillaProductName(bugzillaProductName.data);
+          setScreenshotsOther(screenshotsData.data);
+          setScreenshotsEN(screenshotsENData.data);
+          setItemCount(screenshotsENData.data[0].images.length);
+        }
+      }
+      // else if ()
+
       // if (previousProductsVersion !== "" && previousLocales !== "") {
       //   const screenshotsData = await axios(`${BASE_URL}/screenshots`, {
       //     params: {
@@ -115,7 +168,7 @@ export default function Versions(props) {
   }, [previousProductId, history, selectProductsVersion, selectLocales]);
 
   const fetchfilteredVersionData = async (e) => {
-    setIsLoading(true)
+    setIsLoading(true);
     let localeArr = [];
     for (var x = 0; x < locales.length; x++) {
       let lid = locales[x].id;
@@ -138,12 +191,14 @@ export default function Versions(props) {
       }
     }
     setFilteredLocales(localeArr);
-    setIsLoading(false)
+    setIsLoading(false);
   };
 
   // To get selected Version and Locale to get screenshots
   const onFormSubmit = async (event) => {
     event.preventDefault();
+
+    // window.location.replace("/products/"+previousProductId+"/screenshots/"+selectProductsVersion+"/"+selectLocales)
 
     const bugzillaProductName = await axios(
       `${BASE_URL}/bugzilla_product_names`,
@@ -225,8 +280,10 @@ export default function Versions(props) {
           ((screenshotsOther && screenshotsOther.length !== 0) ||
             (screenshotsEN && screenshotsEN.length !== 0)) && (
             <PaginateForm
-              selectProductsVersion={selectProductsVersion}
-              selectLocales={selectLocales}
+              selectProductsVersion={
+                selectProductsVersion ? selectProductsVersion : versionId
+              }
+              selectLocales={selectLocales ? selectLocales : localeId}
               productsVersion={productsVersion}
               locales={filteredLocales}
               handleVersionChange={(e, event) =>
@@ -247,8 +304,10 @@ export default function Versions(props) {
             screenshotsOther={screenshotsOther}
             screenshotsEN={screenshotsEN}
             itemCount={itemCount}
-            selectProductsVersion={selectProductsVersion}
-            selectLocales={selectLocales}
+            selectProductsVersion={
+              versionId ? versionId : selectProductsVersion
+            }
+            selectLocales={localeId ? localeId : selectLocales}
             elements={elements}
             elementsRight={elementsRight}
             elementsLeft={elementsLeft}
@@ -256,6 +315,7 @@ export default function Versions(props) {
             currentPage={currentPage}
             page={page}
             perPage={perPage}
+            // imageId={imageId}
           />
         ) : (
           filteredLocales &&

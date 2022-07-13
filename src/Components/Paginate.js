@@ -40,9 +40,13 @@ function Paginate(props) {
   const [selectProductsVersion, setSelectProductsVersion] = useState("");
   const [selectLocales, setSelectLocales] = useState("");
   const [analysedImage, setAnalysedImage] = useState("");
-  const [analyseImageIndex, setAnalyseImageIndex] = useState()
+  const [analyseImageIndex, setAnalyseImageIndex] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  // const [imageId, setImageId] = useState(0);
 
+  // const myRef = useRef(null);
+
+  // const executeScroll = () => myRef.current.scrollIntoView()
 
   //Set the page
   const onSetPage = (_event, pageNumber) => {
@@ -86,6 +90,7 @@ function Paginate(props) {
     setSelectProductsVersion(props.selectProductsVersion);
     setSelectLocales(props.selectLocales);
     setOffset(0);
+    // setImageId(props.imageId);
   }, [
     props.screenshotsEN,
     props.screenshotsOther,
@@ -123,8 +128,12 @@ function Paginate(props) {
   ]);
 
   const analyse = async (index) => {
-    setIsLoading(true)
-    
+    setIsLoading(true);
+
+    // if(analyseImageIndex===index){
+    //   setAnalysedImage(analysedImage)
+    // }
+    // else{
     const analysedImageResponse = await axios(`${BASE_URL}/screenshots`, {
       params: {
         product_version_id: selectProductsVersion,
@@ -133,14 +142,14 @@ function Paginate(props) {
       },
       headers: { "Content-Type": "image/png" },
     });
-    setAnalyseImageIndex(index)
+    // setAnalyseImageIndex(index);
     setAnalysedImage(analysedImageResponse.data);
-  // }
-    
-    setIsLoading(false)
+    // }
+
+    setIsLoading(false);
   };
 
-    const paginateEN = () => (
+  const paginateEN = () => (
     <>
       <Pagination
         widgetId="pagination-options-menu-bottom"
@@ -297,13 +306,16 @@ function Paginate(props) {
   };
 
   const paginateOther = () => (
+    // imageId?
+    //   executeScroll():
+
     <>
-    {isLoading ? (
+      {isLoading ? (
         <div
           style={{
             position: "fixed",
             zIndex: 10000,
-            left:0,
+            left: 0,
             top: 0,
             width: "100%",
             height: "100%",
@@ -472,7 +484,7 @@ function Paginate(props) {
               <SplitItem>
                 <div>
                   {elementsRight.map((image, index) => (
-                    <div>
+                    <div id={index}>
                       <div className="container" key={index}>
                         {/* Report a Bug button */}
 
@@ -492,7 +504,7 @@ function Paginate(props) {
                           key={index}
                           className="analyse"
                           onClick={() => {
-                            analyse(index);
+                            analyse(perPage * (page - 1 + index));
                           }}
                         >
                           <div className="text">Analyse</div>
