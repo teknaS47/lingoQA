@@ -49,19 +49,22 @@ export default function PageLayoutSimpleNav() {
   }
   return (
     <BrowserRouter>
+      
       <Page
         header={
+          Route.path!=="/login#login"?(
           <PageHeader
             style={{ zIndex: 100 }}
             logo={"LingoQA Dashboard"}
             logoProps={logoProps}
             headerTools={headerTools}
-          />
+          />):null
         }
       >
         <Switch>
           <Route exact path="/" component={Products} />
-          <Route path="/products/:productid/screenshots" component={Versions} />
+          <Route path="/products/:productid/screenshots/:versionId/:localeId/" component={Versions} />
+          <Route path="/products/:productid/screenshots/" component={Versions} />
           <Route path="/login" component={Login} />
           <Route path="/admin" component={Admin} />
         </Switch>
