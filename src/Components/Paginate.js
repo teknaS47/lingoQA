@@ -504,7 +504,7 @@ function Paginate(props) {
                           key={index}
                           className="analyse"
                           onClick={() => {
-                            analyse(perPage * (page - 1 + index));
+                            analyse(perPage * (page - 1) + index);
                           }}
                         >
                           <div className="text">Analyse</div>
