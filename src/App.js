@@ -12,9 +12,15 @@ import Versions from "./Screens/Versions";
 import Login from "./Screens/Login";
 import Admin from "./Screens/Admin";
 
+import axios from "axios";
+import BASE_URL from "./API/BASE_URL";
+
+// import username from "./Screens/Login.js";
+
 const tokenString = localStorage.getItem("token");
 const adminTokenString = localStorage.getItem("adminToken");
-let logoProps = ""
+
+let logoProps = "";
 
 export default function PageLayoutSimpleNav() {
   if (tokenString) {
@@ -22,22 +28,32 @@ export default function PageLayoutSimpleNav() {
       href: "/",
       target: "_self",
     };
-  }
-  else{
+  } else {
     logoProps = {
       href: "/admin",
       target: "_self",
     };
   }
-  
+
+  const logoutButtonClicked = async (event) => {
+    event.preventDefault();
+
+    await axios.post(`${BASE_URL}/users/logout`, {
+      name: localStorage.getItem("userName"),
+      login_time: localStorage.getItem("loginTime"),
+    });
+    localStorage.clear();
+    window.open("/login", "_self");
+  };
 
   const headerTools = (
     <PageHeaderTools>
       <Button
-        onClick={() => {
-          localStorage.clear();
-          window.open("/login", "_self");
-        }}
+        onClick={
+          logoutButtonClicked
+          // localStorage.clear();
+          // window.open("/login", "_self");
+        }
       >
         Logout
       </Button>
