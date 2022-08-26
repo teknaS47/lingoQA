@@ -38,3 +38,4 @@ app/mailers/*
 app/channels/*
 /config/credentials/*.key
 Gemfile.lock
+/config/master.key

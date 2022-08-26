@@ -9,9 +9,13 @@ gem 'aws-sdk-s3', '~> 1.64.0'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'jbuilder', '~> 2.7'
 gem 'mysql2', '>= 0.5.2'
-gem 'puma', '~> 3.12'
+gem 'puma', '~> 4.3' #'~> 3.12'
 gem 'rack-cors', '~> 1.1.0'
 gem 'rails', '~> 6.0.0'
+gem 'bcrypt', '~> 3.1.7'
+
+gem 'rtesseract'
+gem 'rmagick'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
@@ -25,3 +29,5 @@ group :development do
 end
 
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
+
+gem "ffi"

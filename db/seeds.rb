@@ -1,1 +1,1 @@
-BugzillaProductName.create(name: "ovirt-engine")
+User.create(name: "test", email: "test@redhat.com", password: "test", admin: false)

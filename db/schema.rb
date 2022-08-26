@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_24_094457) do
+ActiveRecord::Schema.define(version: 2022_08_25_075649) do
+
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -67,6 +68,23 @@ ActiveRecord::Schema.define(version: 2021_08_24_094457) do
     t.bigint "product_version_id"
     t.index ["locale_id"], name: "index_screenshots_on_locale_id"
     t.index ["product_version_id"], name: "index_screenshots_on_product_version_id"
+  end
+
+  create_table "user_activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "user_id"
+    t.datetime "login_time"
+    t.datetime "logout_time"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.string "password_digest"
+    t.boolean "admin", default: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["name"], name: "index_users_on_name", unique: true
   end
 
   add_foreign_key "product_versions", "bugzilla_product_names", column: "bugzilla_product_names_id"

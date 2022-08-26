@@ -1,1 +1,0 @@
-BugzillaProductName.create(name: "Red Hat Satellite")

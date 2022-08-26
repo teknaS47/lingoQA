@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  username: MyString
+  login_time: 2022-08-25 13:26:49
+  logout_time: 2022-08-25 13:26:49
+
+two:
+  username: MyString
+  login_time: 2022-08-25 13:26:49
+  logout_time: 2022-08-25 13:26:49

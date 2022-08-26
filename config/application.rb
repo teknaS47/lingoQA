@@ -23,6 +23,7 @@ Bundler.require(*Rails.groups)
 
 module Lingoqa
   class Application < Rails::Application
+    config.force_ssl = true
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 
@@ -38,7 +39,7 @@ module Lingoqa
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins Rails.application.credentials.allowed_origins
-        resource "*", :methods => [:get, :post]
+        resource "*", :methods => [:get, :post, :update]
       end
     end
   end
