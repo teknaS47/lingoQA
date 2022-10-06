@@ -14,73 +14,93 @@ module Api
       def index
         screenshots = Screenshot.where(product_version_id: @version, locale_id: @locale)
         screenshot = screenshots.map { |screenshots|
-          screenshots.as_json.merge(images: screenshots.images.map { |image| url_for(image) })
-
+          screenshots.as_json.merge(images: screenshots.images.map { |image| url_for(image)}
+        )
         }
-        if (params.has_key?("indexnumber"))
-          a = params["indexnumber"].to_i
 
-          screenshots = Screenshot.where(product_version_id: @version, locale_id: @locale)
-          screenshot = screenshots.map { |screenshots|
-            screenshots.as_json.merge(images: screenshots.images.map { |image| image })
+
+        if (params.has_key?("compare_id"))
+          image_index = params["compare_id"].to_i
+
+          english_screenshots = Screenshot.where(product_version_id: @version, locale_id: 3)
+          english_screenshot = english_screenshots.map { |english_screenshots|
+            english_screenshots.as_json.merge(images: english_screenshots.images.map { |image| url_for(image)})
           }
-          s=screenshot[0][:images][a]
-          l=screenshot[0][:images].length
 
-          puts "############################################### #{a+1}"
+          english_image = english_screenshot[0][:images][image_index]
+          other_image = screenshot[0][:images][image_index]
 
-          image_url = (s).service_url
+          comparision={"english_image": english_image, "other_image": other_image}
 
-          image_path = image_url
-          image = Magick::ImageList.new
-          image = Magick::Image.read(image_path).first
-          imagere = image.resize(4)
-          imagere.write "imagere.png"
-          imagegray = image.resize(4)
-          imagegray.colorspace = Magick::LinearGRAYColorspace
-          imageth = imagegray.unsharp_mask(radius = 6.8, sigma = 1.0, amount = 2.69, threshold = 0.0)
-          imageth.write "grey.png"
-          image3 = RTesseract.new("grey.png", lang: "eng")
-          string = image3.to_s
-          box = image3.to_box
+          render json: comparision
 
-          ignore = ["Red", "Hat", "RED", "HAT", "ENTERPRISE", "LINUX", "KDUMP", "GiB"]
-
-          for x in box
-            if ignore.exclude?(x[:word])
-              if x[:confidence] >= 85
-                x_start = x[:x_start] - 10
-                y_start = x[:y_start] - 10
-                x_end = x[:x_end] + 10
-                y_end = x[:y_end] + 10
-                puts x
-                gc = Magick::Draw.new
-                gc.stroke = "red"
-                gc.stroke_width = 3
-                gc.fill = "none"
-                gc.rectangle x_start, y_start, x_end, y_end
-                gc.draw(imagere)
-              end
-            # unless a.include?(x[:word])
-
-            end
-          end
-
-          imagere = imagere.resize(0.25)
-          imagere.write "result.png"
-          file_contents = open("result.png") { |f| f.read }
-          b64 = Base64.strict_encode64(file_contents)
-          render json: b64
-
-        else
-          if screenshot.any?
-            render json: screenshot
           else
-            render json: {
-                     status: 404,
-                     error: :not_found,
-                     message: "Screenshots with version id #{params[:product_version_id]}  and locale id #{params[:locale_id]} not found",
-                   }, status: 404
+
+          if (params.has_key?("indexnumber"))
+            a = params["indexnumber"].to_i
+
+            screenshots = Screenshot.where(product_version_id: @version, locale_id: @locale)
+            screenshot = screenshots.map { |screenshots|
+              screenshots.as_json.merge(images: screenshots.images.map { |image| image } )
+            }
+            s=screenshot[0][:images][a]
+            l=screenshot[0][:images].length
+
+            puts "############################################### #{a+1}"
+
+            image_url = (s).service_url
+
+            image_path = image_url
+            image = Magick::ImageList.new
+            image = Magick::Image.read(image_path).first
+            imagere = image.resize(4)
+            imagere.write "imagere.png"
+            imagegray = image.resize(4)
+            imagegray.colorspace = Magick::LinearGRAYColorspace
+            imageth = imagegray.unsharp_mask(radius = 6.8, sigma = 1.0, amount = 2.69, threshold = 0.0)
+            imageth.write "grey.png"
+            image3 = RTesseract.new("grey.png", lang: "eng")
+            string = image3.to_s
+            box = image3.to_box
+
+            ignore = ["Red", "Hat", "RED", "HAT", "ENTERPRISE", "LINUX", "KDUMP", "GiB"]
+
+            for x in box
+              if ignore.exclude?(x[:word])
+                if x[:confidence] >= 85
+                  x_start = x[:x_start] - 10
+                  y_start = x[:y_start] - 10
+                  x_end = x[:x_end] + 10
+                  y_end = x[:y_end] + 10
+                  puts x
+                  gc = Magick::Draw.new
+                  gc.stroke = "red"
+                  gc.stroke_width = 3
+                  gc.fill = "none"
+                  gc.rectangle x_start, y_start, x_end, y_end
+                  gc.draw(imagere)
+                end
+              # unless a.include?(x[:word])
+
+              end
+            end
+
+            imagere = imagere.resize(0.25)
+            imagere.write "result.png"
+            file_contents = open("result.png") { |f| f.read }
+            b64 = Base64.strict_encode64(file_contents)
+            render json: b64
+
+          else
+            if screenshot.any?
+              render json: screenshot
+            else
+              render json: {
+                      status: 404,
+                      error: :not_found,
+                      message: "Screenshots with version id #{params[:product_version_id]}  and locale id #{params[:locale_id]} not found",
+                    }, status: 404
+            end
           end
         end
       end
