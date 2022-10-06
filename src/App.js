@@ -11,6 +11,7 @@ import Products from "./Screens/Products";
 import Versions from "./Screens/Versions";
 import Login from "./Screens/Login";
 import Admin from "./Screens/Admin";
+import Link from "./Screens/Link";
 
 import axios from "axios";
 import BASE_URL from "./API/BASE_URL";
@@ -80,6 +81,7 @@ export default function PageLayoutSimpleNav() {
           <Route path="/products/:productid/screenshots" component={Versions} />
           <Route path="/login" component={Login} />
           <Route path="/admin" component={Admin} />
+          <Route path="/compare/:version_id/:locale_id/:compare_id" component={Link} />
         </Switch>
       </Page>
     </BrowserRouter>

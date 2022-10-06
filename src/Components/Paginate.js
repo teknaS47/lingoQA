@@ -33,6 +33,8 @@ function Paginate(props) {
   const [imageColumn, setImageColumn] = useState(0);
   const [bugzillaProductName, setBugzillaProductName] = useState("");
   const [copyAlert, setCopyAlert] = useState(false);
+  const [productVersionId, setProductVersionID] = useState();
+  const [localeId, setLocaleId] = useState();
 
   //Set the page
   const onSetPage = (_event, pageNumber) => {
@@ -72,6 +74,8 @@ function Paginate(props) {
     setBugzillaProductName(props.bugzillaProductName);
     setScreenshotsOther(props.screenshotsOther);
     setScreenshotsEN(props.screenshotsEN);
+    setProductVersionID(props.screenshotsOther[0].product_version_id)
+    setLocaleId(props.screenshotsOther[0].locale_id)
     setItemCount(props.itemCount);
     setOffset(0);
   }, [
@@ -98,6 +102,7 @@ function Paginate(props) {
         setElementRight(elementsRight);
       }
     };
+    console.log("SCREEENSHOOOTTT", screenshotsOther)
     SetImages();
   }, [
     offset,
@@ -123,13 +128,9 @@ function Paginate(props) {
         onLastClick={onLastClick}
       />
 
-      
       <div style={{ position: "fixed", zIndex: 10000, width: "97%", top: 50 }}>
         {copyAlert ? (
-           <Alert
-           variant="success"
-           title="Image link coppied successfully"
-         />
+          <Alert variant="success" title="Image link coppied successfully" />
         ) : null}
       </div>
 
@@ -147,10 +148,7 @@ function Paginate(props) {
               redirect();
             }}
           >
-            <Button
-              key="confirm"
-              variant="primary"
-            >
+            <Button key="confirm" variant="primary">
               Confirm
             </Button>
           </CopyToClipboard>,
@@ -196,11 +194,11 @@ function Paginate(props) {
       <div className="en_screens mb-4">
         {elementsLeft.map((image, index) => (
           <div key={index}>
-            <div className="container" >
+            <div className="container">
               {/* Report a Bug button */}
 
               <div
-                className="redirect"
+                className="report"
                 onClick={() => {
                   setCurrentImageIndex(index);
                   setImageColumn(0);
@@ -288,10 +286,7 @@ function Paginate(props) {
 
       <div style={{ position: "fixed", zIndex: 10000, width: "97%", top: 50 }}>
         {copyAlert ? (
-           <Alert
-           variant="success"
-           title="Image link coppied successfully"
-         />
+          <Alert variant="success" title="Image link coppied successfully" />
         ) : null}
       </div>
 
@@ -313,10 +308,7 @@ function Paginate(props) {
               redirect();
             }}
           >
-            <Button
-              key="confirm"
-              variant="primary"
-            >
+            <Button key="confirm" variant="primary">
               Confirm
             </Button>
           </CopyToClipboard>,
@@ -372,8 +364,8 @@ function Paginate(props) {
                       {/* Report a Bug button */}
 
                       <div
-                      key={index}
-                        className="redirect"
+                        key={index}
+                        className="report"
                         onClick={() => {
                           setCurrentImageIndex(index);
                           setImageColumn(0);
@@ -422,11 +414,26 @@ function Paginate(props) {
                   {elementsRight.map((image, index) => (
                     <div>
                       <div className="container" key={index}>
+
+                        <CopyToClipboard
+                          text={window.location.href.split("3000")[0]+"3000/compare/"+productVersionId+"/"+localeId+"/"+ (perPage * (page - 1) + index)}
+                          onCopy={() => {
+                            setCopyAlert(true);
+                            setTimeout(() => {
+                              setCopyAlert(false);
+                            }, 2000);
+                          }}
+                        >
+                          <div className="compare">
+                            <div className="text">Compare Link</div>
+                          </div>
+                        </CopyToClipboard>
+
                         {/* Report a Bug button */}
 
                         <div
-                        key={index}
-                          className="redirect"
+                          key={index}
+                          className="report"
                           onClick={() => {
                             setCurrentImageIndex(index);
                             setImageColumn(1);
@@ -472,7 +479,7 @@ function Paginate(props) {
           {/* Zoomed image view */}
 
           {isZoomed ? (
-            <div> 
+            <div>
               <div className="zoomed_image_navigation">
                 <button
                   style={{

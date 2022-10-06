@@ -46,7 +46,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [validatedName, setValidatedName] = React.useState("default");
+  const [validatedName] = React.useState("default");
   const [validatedEmail, setValidatedEmail] = React.useState("default");
   const [validatedPassword, setValidatedPassword] = React.useState("default");
   const [validatedConfirmPassword, setValidatedConfirmPassword] =
@@ -197,7 +197,7 @@ function Login() {
   const handleEmailChange = (email) => {
     setEmail(email);
     setValidatedEmail("default");
-    if (!/^[a-zA-Z0-9]+@redhat.com+$/.test(email)) {
+    if (!/^[a-zA-Z0-9]+@redhat.com$/.test(email)) {
       setValidatedEmail("error");
     } else {
       setValidatedEmail("success");
