@@ -112,7 +112,7 @@ function Login() {
         } else {
           localStorage.setItem("adminToken", true);
           localStorage.setItem("userName", signinUsername);
-          localStorage.setItem("loginTime", userData.data.loginTime);
+          localStorage.setItem("loginTime", userData.data.login_time);
           history.push("/admin");
         }
       } else {
